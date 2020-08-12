@@ -9,3 +9,7 @@ pytz==2020.1
 sqlparse==0.3.1
 zipp==3.1.0
 django-heroku==0.3.1
+pytest-django==3.9.0
+factory_boy
+django-test-plus
+pytest
