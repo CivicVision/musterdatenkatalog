@@ -1,7 +1,5 @@
-from django.http import HttpResponse
-from django.template import loader
+from django.views.generic import CreateView, TemplateView
 
-def index(request):
-    template = loader.get_template('index.html')
-    context = { }
-    return HttpResponse(template.render(context, request))
+class IndexView(TemplateView):
+    template_name = "index.html"
+
