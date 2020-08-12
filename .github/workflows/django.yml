@@ -28,9 +28,6 @@ jobs:
     - name: Run DB migrations
       run: |
         python manage.py migrate
-    - name: Load fixtures
-      run: |
-        python manage.py loaddata initial_data
     - name: Run Tests
       run: |
-        python manage.py test
+        python -m pytest --migrations
