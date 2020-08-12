@@ -1,0 +1,88 @@
+[
+   {
+      "model":"musterdaten.modelsubject",
+      "pk":1,
+      "fields":{
+         "title":"Thema 1"
+      }
+   },
+   {
+      "model":"musterdaten.leika",
+      "pk":1,
+      "fields":{
+         "title":"Leika 1",
+         "code":"1",
+         "description":"Leika 1 Description"
+      }
+   },
+   {
+      "model":"musterdaten.modeldataset",
+      "pk":1,
+      "fields":{
+         "title":"Musterdatensatze 1",
+         "modelsubject":1,
+         "leika":1
+      }
+   },
+   {
+      "model":"musterdaten.category",
+      "pk":1,
+      "fields":{
+         "title":"Kat 1",
+         "DCAT_AP":true
+      }
+   },
+   {
+      "model":"musterdaten.license",
+      "pk":1,
+      "fields":{
+         "title":"Lizenz 1",
+         "url":"http://www.google.com",
+         "short_title":"Liz"
+      }
+   },
+   {
+      "model":"musterdaten.state",
+      "pk":1,
+      "fields":{
+         "name":"BundesLand"
+      }
+   },
+   {
+      "model":"musterdaten.city",
+      "pk":1,
+      "fields":{
+         "name":"Stadte 1"
+      }
+   },
+   {
+      "model":"musterdaten.dataset",
+      "pk":1,
+      "fields":{
+         "title":"Daten",
+         "description":"Da",
+         "created_at":"2020-07-30T11:28:49.628Z",
+         "original_id":"123",
+         "url":"http://www.yes.no",
+         "updated_at":"2020-07-30T11:28:49.628Z",
+         "metadata_created":"2020-07-30T11:28:43Z",
+         "modeldataset":1,
+         "category":1,
+         "city":1,
+         "license":1,
+         "top_3":[
+            1
+         ]
+      }
+   },
+   {
+      "model":"musterdaten.score",
+      "pk":1,
+      "fields":{
+         "created_at":"2020-07-30T11:29:14.297Z",
+         "dataset":1,
+         "modeldataset":1,
+         "session_id":"123"
+      }
+   }
+]
