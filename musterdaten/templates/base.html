@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.5/dist/base.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.5/dist/components.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.2.x/dist/typography.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.5/dist/utilities.min.css">
     <title>{% block title %}{% endblock %}</title>
 
     {% block head %}
@@ -14,7 +18,7 @@
     {% block extrahead %}{% endblock %}
     {% endblock %}
   </head>
-  <body class="">
+  <body class="container prose lg:prose-xl">
       {% block sidebar %}{% endblock %}
       <div class="{% block container_class %}{% endblock %}">
           {% block content %}{% endblock %}
