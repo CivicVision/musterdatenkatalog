@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_and_test:
 
     runs-on: ubuntu-latest
     strategy:
@@ -31,3 +31,19 @@ jobs:
     - name: Run Tests
       run: |
         python -m pytest --migrations
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8]
+    steps:
+    - name: Run Tests
+      run: |
+        python -m pytest --migrations --cov=musterdaten
+    - name: Codecov
+      uses: codecov/codecov-action@v1.0.13
+      with:
+        name: coverage
+        token: ${{ secrets.CODECOV_TOKEN }}
