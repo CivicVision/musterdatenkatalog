@@ -13,3 +13,4 @@ pytest-django==3.9.0
 factory_boy
 django-test-plus
 pytest
+coverage
