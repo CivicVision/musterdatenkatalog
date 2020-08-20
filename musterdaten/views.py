@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView, TemplateView
 
@@ -14,7 +15,7 @@ class UeberView(TemplateView):
 
 class EvaluateFormView(FormView):
     form_class = ScoreForm
-    success_url = reverse_lazy('evaluate')
+    success_url = reverse_lazy('musterdaten:evaluate')
     template_name = 'evaluate_formview.html'
 
     def get_context_data(self, **kwargs):
