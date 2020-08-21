@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.2.x/dist/typography.min.css">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.5/dist/utilities.min.css">
     <script src="https://cdn.jsdelivr.net/npm/turbolinks@5.2.0/dist/turbolinks.min.js" type="text/javascript"></script>
-		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script>
-		<script type="module" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js"></script>
-		<script nomodule src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine-ie11.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine-ie11.min.js" defer></script>
     <title>{% block title %}{% endblock %}</title>
 
     {% block head %}
@@ -22,7 +22,7 @@
     {% block extrahead %}{% endblock %}
     {% endblock %}
   </head>
-	{% load menu %}
+  {% load menu %}
   <body class="">
 <div>
   <div class="bg-gray-800 pb-32">
@@ -35,7 +35,7 @@
               </div>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline">
-									{% show_main_menu 'ml-4' %}
+                  {% show_main_menu 'ml-4' %}
                 </div>
               </div>
             </div>
@@ -65,14 +65,14 @@
       -->
       <div class="block border-b border-gray-700 md:hidden">
         <div class="px-2 py-3 sm:px-3">
-					{% show_main_menu 'block mt-1' %}
+          {% show_main_menu 'block mt-1' %}
         </div>
       </div>
     </nav>
     <header class="py-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl leading-9 font-bold text-white">
-					{% main_title request %}
+          {% main_title request %}
         </h1>
       </div>
     </header>
@@ -80,9 +80,9 @@
 
   <main class="-mt-32 ">
     <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8{% block container_class %}{% endblock %}">
-			<div class="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-				{% block content %}{% endblock %}
-			</div>
+      <div class="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
+        {% block content %}{% endblock %}
+      </div>
     </div>
   </main>
 </div>
