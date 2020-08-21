@@ -7,6 +7,3 @@ from musterdaten.tests.factories import (
 
 class TestCase(PlusTestCase):
     """A base test case class"""
-    #dataset = DatasetFactory()
-    #modeldataset = ModeldatasetFactory()
-
