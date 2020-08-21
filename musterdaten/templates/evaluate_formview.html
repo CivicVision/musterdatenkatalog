@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="" x-data="{ top3: false, all: false, three: '' }">
+	<h1 class="text-4xl text-center mt-16 leading-10 ">{{ dataset.title }}</h1>
+	<div class="mt-2 flex items-center text-sm leading-5 text-gray-500 sm:mr-6">
+		<h5>{{dataset.category.title}}</h5>
+	</div>
+	<p class="text-gray-600">{{ dataset.description }}</p>
+	<hr class="mt-6"/>
+	<p class="mt-6 text-gray-600 text-sm">Das Machine Learning Modell schlägt vor:</p>
+	<h2 class="mt-1 text-2xl">{{dataset.modeldataset}}</h2>
+	<p class="mt-2 text-gray-600 text-sm">Ist das der korrekte Musterdatensatz?</p>
+	<div class="flex">
+		<form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data'>
+			{% csrf_token %}
+			<input type="hidden" name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
+			<input type="hidden" name="modeldataset" id="id_modeldataset" value="{{ modeldataset.id }}"/>
+			<button class="focus:outline-none" type="submit">
+				<svg viewBox="0 0 20 20" fill="currentColor" :class="{ 'opacity-25': top3  }" class="check-circle w-32 h-32 text-green-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+			</button>
+		</form>
+		<button class="focus:outline-none" @click="top3 = true">
+			<svg viewBox="0 0 20 20" fill="currentColor" class="x-circle w-32 h-32 text-red-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+		</button>
+	</div>
+	<div class="mt-4" x-show="top3">
+		<p class="text-gray-600 text-sm">Vielleicht einer dieser Musterdatensätze.</p>
+		<form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data' id="update_score">
+			{% csrf_token %}
+			<input type="text" hidden name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
+			<div >
+				{% for top_3_obj in top_3.all %}
+				<input type="radio" id="{{ top_3_obj.id }}" name="modeldataset" @click="all = false;three={{ top_3_obj.id }}" value="{{ top_3_obj.id }}">
+				<label for="{{ top_3_obj.id }}">{{ top_3_obj.title }}</label><br>
+				{% endfor %}
+			</div>
+			<input type="radio" id="none" name="modeldataset" value="" @click="all = true">
+			<label for="none">Keiner davon</label><br>
+			<button type="submit" x-bind:disabled="!three" x-show="!all" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out disabled:opacity-75"> Abschicken</button>
+		</form>
+		<div id="" class="mt-4 " x-show="all">
+			<p class="text-gray-600 text-sm">Wähle aus allen Musterdatensätzen:</p>
+			<form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data' class="">
+				{% csrf_token %}
+				<input type="hidden" name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
+				<select id="id_modeldataset" name="modeldataset">
+					{% for modeldataset_obj in all_modeldatasets.all %}
+					<option value="{{ modeldataset_obj.id }}">{{ modeldataset_obj.title }}</option>
+					{% endfor %}
+				</select><br/>
+				<button type="submit" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700 active:bg-indigo-700 transition duration-150 ease-in-out disabled:opacity-75"> Abschicken</button>
+			</form>
+		</div>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+
+	</div>
+	<hr class="mt-6"/>
+	<table class="mt-16" >
+
+		<tr>
+			<td>
+				Titel
+			</td>
+			<td>
+				{{ dataset.title }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Beschreibung
+			</td>
+			<td>
+				{{ dataset.description }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Erstellt am
+			</td>
+			<td>
+				{{ dataset.created_at|date:'d.m.Y' }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Portal id
+			</td>
+			<td>
+				{{ dataset.original_id }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				url
+			</td>
+			<td>
+				<a href="{{ dataset.url }}">{{ dataset.url }}</a>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				geändert am
+			</td>
+			<td>
+				{{ dataset.updated_at }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				metadaten erstellt
+			</td>
+			<td>
+				{{ dataset.metadata_created }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Musterdatensatz
+			</td>
+			<td>
+				{{ dataset.modeldataset.title }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Kategorie
+			</td>
+			<td>
+				{{ dataset.category.title }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Stadt
+			</td>
+			<td>
+				{{ dataset.city.name }}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				Lizenz
+			</td>
+			<td>
+				{{ dataset.license.title }}
+			</td>
+		</tr>
+	</table>
+
+</div>
+
+{% endblock %}
