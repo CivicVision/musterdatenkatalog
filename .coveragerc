@@ -3,3 +3,5 @@ omit =
     */tests/*
     */fixtures/*
     */migrations/*
+    api/apps.py
+    musterdaten/apps.py
