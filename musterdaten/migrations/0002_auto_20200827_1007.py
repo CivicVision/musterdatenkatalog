@@ -30,4 +30,9 @@ class Migration(migrations.Migration):
             old_name='category',
             new_name='categories',
         ),
+        migrations.AlterField(
+            model_name='modeldataset',
+            name='leika',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='musterdaten.Leika'),
+        ),
     ]
