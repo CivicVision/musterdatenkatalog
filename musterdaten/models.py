@@ -89,13 +89,14 @@ class Dataset(models.Model):
     original_id = models.CharField(max_length=32, verbose_name="portal_id")
     url = models.URLField()
     updated_at = models.DateTimeField(auto_now=True, verbose_name="geändert_am")
-    metadata_created = models.DateTimeField(verbose_name="metadaten_erstellt")
+    metadata_updated_at = models.DateTimeField(verbose_name="metadaten_geändert_am", null=True)
+    metadata_generated_at = models.DateTimeField(verbose_name="metadaten_generiert", null=True)
 
     modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
-    category = models.ForeignKey(to=Category, on_delete=models.PROTECT)
     city = models.ForeignKey(to=City, on_delete=models.PROTECT)
     license = models.ForeignKey(to=License, on_delete=models.PROTECT)
 
+    categories = models.ManyToManyField(to=Category)
     top_3 = models.ManyToManyField(to=Modeldataset, related_name="dataset_top3")
 
     class Meta:

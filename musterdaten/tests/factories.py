@@ -47,10 +47,18 @@ class DatasetFactory(factory.django.DjangoModelFactory):
         model = models.Dataset
 
     title = 'Interesting Dataset'
-    metadata_created =  datetime.date(2020, 5, 7)
+    metadata_generated_at =  datetime.date(2020, 5, 7)
     modeldataset = factory.SubFactory(ModeldatasetFactory)
-    category = factory.SubFactory(CategoryFactory)
     city = factory.SubFactory(CityFactory)
     license = factory.SubFactory(LicenseFactory)
 
+    @factory.post_generation
+    def categories(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for category in extracted:
+                self.categories.add(category)
 
