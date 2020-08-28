@@ -8,7 +8,7 @@
   "environments": {
     "review": {
       "scripts": {
-        "postdeploy": "python manage.py loaddata initial_data && python manage.py loaddata admin_data"
+        "postdeploy": "python manage.py import_csv_data --url=musterdaten/tests/fixtures/import_data.csv && python manage.py loaddata admin_data"
       }
     }
   }
