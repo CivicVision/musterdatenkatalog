@@ -25,14 +25,68 @@ class Migration(migrations.Migration):
             name='metadata_updated_at',
             field=models.DateTimeField(null=True, verbose_name='metadaten_geändert_am'),
         ),
-        migrations.RenameField(
-            model_name='dataset',
-            old_name='category',
-            new_name='categories',
-        ),
         migrations.AlterField(
             model_name='modeldataset',
             name='leika',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='musterdaten.Leika'),
+        ),
+        migrations.AlterField(
+            model_name='city',
+            name='name',
+            field=models.CharField(max_length=64),
+        ),
+        migrations.RemoveField(
+            model_name='dataset',
+            name='category',
+        ),
+        migrations.AddField(
+            model_name='dataset',
+            name='categories',
+            field=models.ManyToManyField(to='musterdaten.Category'),
+        ),
+        migrations.AlterField(
+            model_name='dataset',
+            name='city',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='musterdaten.City'),
+        ),
+        migrations.AlterField(
+            model_name='leika',
+            name='description',
+            field=models.CharField(max_length=512),
+        ),
+        migrations.AlterField(
+            model_name='category',
+            name='title',
+            field=models.CharField(max_length=128, verbose_name='titel'),
+        ),
+        migrations.AlterField(
+            model_name='dataset',
+            name='description',
+            field=models.TextField(verbose_name='beschreibung'),
+        ),
+        migrations.AlterField(
+            model_name='dataset',
+            name='original_id',
+            field=models.CharField(max_length=512, verbose_name='portal_id'),
+        ),
+        migrations.AlterField(
+            model_name='dataset',
+            name='title',
+            field=models.CharField(max_length=512, verbose_name='titel'),
+        ),
+        migrations.AlterField(
+            model_name='license',
+            name='short_title',
+            field=models.CharField(max_length=128),
+        ),
+        migrations.AlterField(
+            model_name='license',
+            name='title',
+            field=models.CharField(max_length=128, verbose_name='titel'),
+        ),
+        migrations.AlterField(
+            model_name='modeldataset',
+            name='title',
+            field=models.CharField(max_length=128, verbose_name='titel'),
         ),
     ]
