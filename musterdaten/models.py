@@ -22,7 +22,7 @@ class Leika(models.Model):
 
 
 class Modeldataset(models.Model):
-    title = models.CharField(max_length=64, verbose_name="titel")
+    title = models.CharField(max_length=128, verbose_name="titel")
 
     modelsubject = models.ForeignKey(to=Modelsubject, on_delete=models.PROTECT)
     leika = models.ForeignKey(to=Leika, on_delete=models.PROTECT, null=True)
@@ -36,7 +36,7 @@ class Modeldataset(models.Model):
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=64, verbose_name="titel")
+    title = models.CharField(max_length=128, verbose_name="titel")
     DCAT_AP = models.BooleanField(default=False)
 
     class Meta:
@@ -48,9 +48,9 @@ class Category(models.Model):
 
 
 class License(models.Model):
-    title = models.CharField(max_length=64, verbose_name="titel")
+    title = models.CharField(max_length=128, verbose_name="titel")
     url = models.URLField()
-    short_title = models.CharField(max_length=32)
+    short_title = models.CharField(max_length=128)
 
     class Meta:
         verbose_name = "Lizenz"
@@ -83,10 +83,10 @@ class City(models.Model):
 
 
 class Dataset(models.Model):
-    title = models.CharField(max_length=64, verbose_name="titel")
-    description = models.CharField(max_length=512, verbose_name="beschreibung")
+    title = models.CharField(max_length=512, verbose_name="titel")
+    description = models.TextField(verbose_name="beschreibung")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="erstellt_am")
-    original_id = models.CharField(max_length=64, verbose_name="portal_id")
+    original_id = models.CharField(max_length=512, verbose_name="portal_id")
     url = models.URLField()
     updated_at = models.DateTimeField(auto_now=True, verbose_name="geändert_am")
     metadata_updated_at = models.DateTimeField(verbose_name="metadaten_geändert_am", null=True)
