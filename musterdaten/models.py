@@ -15,7 +15,7 @@ class Modelsubject(models.Model):
 class Leika(models.Model):
     title = models.CharField(max_length=64, verbose_name="titel")
     code = models.CharField(max_length=64)
-    description = models.CharField(max_length=128)
+    description = models.CharField(max_length=512)
 
     def __str__(self):
         return self.title
@@ -84,9 +84,9 @@ class City(models.Model):
 
 class Dataset(models.Model):
     title = models.CharField(max_length=64, verbose_name="titel")
-    description = models.CharField(max_length=128, verbose_name="beschreibung")
+    description = models.CharField(max_length=512, verbose_name="beschreibung")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="erstellt_am")
-    original_id = models.CharField(max_length=32, verbose_name="portal_id")
+    original_id = models.CharField(max_length=64, verbose_name="portal_id")
     url = models.URLField()
     updated_at = models.DateTimeField(auto_now=True, verbose_name="geändert_am")
     metadata_updated_at = models.DateTimeField(verbose_name="metadaten_geändert_am", null=True)
