@@ -9,7 +9,8 @@ from rest_framework.response import Response
 from api.serializer import (
     ModeldatasetSerializer,
     ModelsubjectSerializer,
-    ScoreSerializer
+    ScoreSerializer,
+    DatasetSerializer
 )
 from musterdaten.models import (
     Modeldataset,
@@ -48,3 +49,7 @@ class ModeldatasetViewset(APIViewSet):
 class ScoreViewset(APIViewSet):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
+
+class DatasetViewSet(APIViewSet):
+    queryset = Dataset.objects.all()
+    serializer_class = DatasetSerializer

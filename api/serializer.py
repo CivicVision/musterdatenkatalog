@@ -3,7 +3,8 @@ from rest_framework import serializers
 from musterdaten.models import (
     Modeldataset,
     Modelsubject,
-    Score
+    Score,
+    Dataset
 )
 
 class ModelsubjectSerializer(serializers.ModelSerializer):
@@ -27,3 +28,16 @@ class ScoreSerializer(serializers.ModelSerializer):
         model = Score
         fields = ['id', 'session_id', 'modeldataset',
                   'dataset_id', 'modeldataset_id']
+
+class DatasetSerializer(serializers.ModelSerializer):
+    city = serializers.StringRelatedField()
+    license = serializers.StringRelatedField()
+    modeldataset = serializers.StringRelatedField()
+    modeldataset_id = serializers.PrimaryKeyRelatedField(queryset=Modeldataset.objects.all())
+    categories = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Dataset
+        fields = ['id', 'title', 'description', 'url', 'original_id',
+                  'modeldataset', 'modeldataset_id', 'city', 'license', 'categories']
+

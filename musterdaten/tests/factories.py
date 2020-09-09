@@ -21,7 +21,7 @@ class CityFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.City
 
-    name = 'Category'
+    name = 'San Diego'
 
 class CategoryFactory(factory.django.DjangoModelFactory):
     class Meta:

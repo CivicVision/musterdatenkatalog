@@ -4,7 +4,8 @@ from api.test import APITestCase
 from musterdaten.tests.factories import (
     ModeldatasetFactory,
     ModelsubjectFactory,
-    ScoreFactory
+    ScoreFactory,
+    DatasetFactory
 )
 
 class TestModeldataset(APITestCase):
@@ -71,3 +72,32 @@ class TestScore(APITestCase):
         self.assert_http_200_ok()
         assert response.data.get("id") == score.pk
 
+class TestDataset(APITestCase):
+    def test_ok(self):
+        self.get('api:dataset-list', extra={'format': 'json'})
+
+        self.assert_http_200_ok()
+
+    def test_can_retrieve_by_id(self):
+        dataset = DatasetFactory()
+
+        response = self.get("api:dataset-detail", pk=dataset.pk)
+
+        self.assert_http_200_ok()
+        assert response.data.get("id") == dataset.pk
+
+    def test_has_the_city_name(self):
+        dataset = DatasetFactory()
+
+        response = self.get("api:dataset-detail", pk=dataset.pk)
+
+        self.assert_http_200_ok()
+        assert response.data.get("city") == "San Diego"
+
+    def test_has_the_license_title(self):
+        dataset = DatasetFactory()
+
+        response = self.get("api:dataset-detail", pk=dataset.pk)
+
+        self.assert_http_200_ok()
+        assert response.data.get("license") == "Lizenz"
