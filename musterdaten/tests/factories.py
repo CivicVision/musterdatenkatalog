@@ -62,3 +62,10 @@ class DatasetFactory(factory.django.DjangoModelFactory):
             for category in extracted:
                 self.categories.add(category)
 
+class ScoreFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Score
+
+    session_id = '1234'
+    dataset = factory.SubFactory(DatasetFactory)
+    modeldataset = factory.SubFactory(ModeldatasetFactory)

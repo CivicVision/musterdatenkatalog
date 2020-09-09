@@ -6,8 +6,17 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListMode
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from api.serializer import ModeldatasetSerializer, ModelsubjectSerializer
-from musterdaten.models import Modeldataset, Modelsubject, Dataset
+from api.serializer import (
+    ModeldatasetSerializer,
+    ModelsubjectSerializer,
+    ScoreSerializer
+)
+from musterdaten.models import (
+    Modeldataset,
+    Modelsubject,
+    Dataset,
+    Score
+)
 
 class APIViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     pass
@@ -35,3 +44,7 @@ class ModeldatasetViewset(APIViewSet):
         datasets = Modeldataset.objects.filter(title__contains=q)
         serializer = self.get_serializer(datasets, many=True)
         return Response(serializer.data)
+
+class ScoreViewset(APIViewSet):
+    queryset = Score.objects.all()
+    serializer_class = ScoreSerializer

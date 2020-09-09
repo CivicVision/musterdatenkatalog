@@ -3,7 +3,8 @@ from api.test import APITestCase
 
 from musterdaten.tests.factories import (
     ModeldatasetFactory,
-    ModelsubjectFactory
+    ModelsubjectFactory,
+    ScoreFactory
 )
 
 class TestModeldataset(APITestCase):
@@ -55,4 +56,18 @@ class TestModelsubject(APITestCase):
 
         self.assert_http_200_ok()
         assert response.data.get("id") == modelsubject.pk
+
+class TestScore(APITestCase):
+    def test_ok(self):
+        self.get('api:score-list', extra={'format': 'json'})
+
+        self.assert_http_200_ok()
+
+    def test_can_retrieve_by_id(self):
+        score = ScoreFactory()
+
+        response = self.get("api:score-detail", pk=score.pk)
+
+        self.assert_http_200_ok()
+        assert response.data.get("id") == score.pk
 
