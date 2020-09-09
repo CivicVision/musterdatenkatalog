@@ -41,3 +41,18 @@ class TestModeldataset(APITestCase):
         self.assert_http_200_ok()
         assert len(response.data) == 1
         assert response.data[0]["title"] == dataset.title
+
+class TestModelsubject(APITestCase):
+    def test_ok(self):
+        self.get('api:modelsubject-list', extra={'format': 'json'})
+
+        self.assert_http_200_ok()
+
+    def test_can_retrieve_by_id(self):
+        modelsubject = ModelsubjectFactory()
+
+        response = self.get("api:modelsubject-detail", pk=modelsubject.pk)
+
+        self.assert_http_200_ok()
+        assert response.data.get("id") == modelsubject.pk
+

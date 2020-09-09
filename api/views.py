@@ -12,6 +12,10 @@ from musterdaten.models import Modeldataset, Modelsubject, Dataset
 class APIViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     pass
 
+class ModelsubjectViewset(APIViewSet):
+    queryset = Modelsubject.objects.all()
+    serializer_class = ModelsubjectSerializer
+
 class ModeldatasetViewset(APIViewSet):
     queryset = (
             Modeldataset.objects.
