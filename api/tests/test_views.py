@@ -44,6 +44,11 @@ class TestModeldataset(APITestCase):
         assert len(response.data) == 1
         assert response.data[0]["title"] == dataset.title
 
+    def test_cannot_create(self):
+        self.post('api:modeldataset-list', data={})
+
+        self.assert_http_405_method_not_allowed()
+
 class TestModelsubject(APITestCase):
     def test_ok(self):
         self.get('api:modelsubject-list', extra={'format': 'json'})
@@ -57,6 +62,11 @@ class TestModelsubject(APITestCase):
 
         self.assert_http_200_ok()
         assert response.data.get("id") == modelsubject.pk
+
+    def test_cannot_create_modelsubject(self):
+        self.post('api:modelsubject-list', data={'title': 'Test'})
+
+        self.assert_http_405_method_not_allowed()
 
 class TestScore(APITestCase):
     def test_ok(self):

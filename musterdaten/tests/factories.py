@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 
 import factory
 from musterdaten import models
@@ -47,7 +47,7 @@ class DatasetFactory(factory.django.DjangoModelFactory):
         model = models.Dataset
 
     title = 'Interesting Dataset'
-    metadata_generated_at =  datetime.date(2020, 5, 7)
+    metadata_generated_at = timezone.now()
     modeldataset = factory.SubFactory(ModeldatasetFactory)
     city = factory.SubFactory(CityFactory)
     license = factory.SubFactory(LicenseFactory)

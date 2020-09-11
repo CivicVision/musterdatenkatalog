@@ -7,6 +7,7 @@ class Modelsubject(models.Model):
     class Meta:
         verbose_name = "Thema"
         verbose_name_plural = "Themen"
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -30,6 +31,7 @@ class Modeldataset(models.Model):
     class Meta:
         verbose_name = 'Musterdatensatz'
         verbose_name_plural = 'Musterdatensätze'
+        ordering = ['title']
 
     def __str__(self):
         return self.name
@@ -106,6 +108,7 @@ class Dataset(models.Model):
     class Meta:
         verbose_name = 'Datensatz'
         verbose_name_plural = 'Datensätze'
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -121,6 +124,7 @@ class Score(models.Model):
     class Meta:
         verbose_name = "Bewertung"
         verbose_name_plural = "Bewertungen"
+        ordering = ['id']
 
     def __str__(self):
         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.modeldataset.title
