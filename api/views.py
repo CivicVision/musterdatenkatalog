@@ -1,5 +1,6 @@
 from django.db.models import Prefetch
 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin
@@ -10,7 +11,8 @@ from api.serializer import (
     ModeldatasetSerializer,
     ModelsubjectSerializer,
     ScoreSerializer,
-    DatasetSerializer
+    DatasetSerializer,
+    CreateDatasetSerializer
 )
 from musterdaten.models import (
     Modeldataset,
@@ -18,6 +20,9 @@ from musterdaten.models import (
     Dataset,
     Score
 )
+
+class CompleteAPIViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    pass
 
 class APIViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     pass
@@ -50,6 +55,11 @@ class ScoreViewset(APIViewSet):
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
 
-class DatasetViewSet(APIViewSet):
+class DatasetViewSet(CompleteAPIViewSet):
     queryset = Dataset.objects.all()
     serializer_class = DatasetSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateDatasetSerializer
+        return super().get_serializer_class()

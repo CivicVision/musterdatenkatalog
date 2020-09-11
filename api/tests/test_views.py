@@ -101,3 +101,21 @@ class TestDataset(APITestCase):
 
         self.assert_http_200_ok()
         assert response.data.get("license") == "Lizenz"
+
+    def test_cannot_create_dataset(self):
+        dataset_data = {
+            "title": "Dataset",
+            "description": "DatasetDescription",
+            "original_id": 12345,
+            "url": "http://www.google.com",
+            "modelsubject": "ModelsubjectTitle",
+            "modeldataset": "ModeldatasetTitle",
+            "license": "License",
+            "categories": ["one", "two", "three"],
+            "city": "Munich"
+
+            }
+        self.post('api:dataset-list', data=dataset_data)
+
+        self.assert_http_401_unauthorized()
+
