@@ -40,7 +40,7 @@ class SimplePasswordHasher(BasePasswordHasher):
         return {"algorithm": "dumb", "hash": encoded.split("$", 2)[2]}
 
 
-PASSWORD_HASHERS = ("project.testing_settings.SimplePasswordHasher",)
+PASSWORD_HASHERS = ("catalog.testing_settings.SimplePasswordHasher",)
 
 # Whitenoise does not play well with tz_detect because tests don't run collectstatic.
 # Override back to the default storage for testing.

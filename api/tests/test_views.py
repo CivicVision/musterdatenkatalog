@@ -1,5 +1,7 @@
 import factory
+
 from api.test import APITestCase
+from rest_framework.authtoken.models import Token
 
 from musterdaten.tests.factories import (
     ModeldatasetFactory,
@@ -7,6 +9,7 @@ from musterdaten.tests.factories import (
     ScoreFactory,
     DatasetFactory
 )
+
 
 class TestModeldataset(APITestCase):
     def test_ok(self):
@@ -83,6 +86,7 @@ class TestScore(APITestCase):
         assert response.data.get("id") == score.pk
 
 class TestDataset(APITestCase):
+
     def test_ok(self):
         self.get('api:dataset-list', extra={'format': 'json'})
 
@@ -114,6 +118,15 @@ class TestDataset(APITestCase):
 
     def test_cannot_create_dataset(self):
         dataset_data = {
+            }
+        self.post('api:dataset-list', data=dataset_data)
+
+        self.assert_http_401_unauthorized()
+
+    def test_can_create_dataset_when_token_is_valid(self):
+        admin = self.make_user(username="admin")
+        token, success = Token.objects.get_or_create(user=admin)
+        dataset_data = {
             "title": "Dataset",
             "description": "DatasetDescription",
             "original_id": 12345,
@@ -125,7 +138,10 @@ class TestDataset(APITestCase):
             "city": "Munich"
 
             }
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         self.post('api:dataset-list', data=dataset_data)
 
-        self.assert_http_401_unauthorized()
+        self.assert_http_201_created()
+
+        self.client.credentials()
 
