@@ -7,6 +7,7 @@ class Modelsubject(models.Model):
     class Meta:
         verbose_name = "Thema"
         verbose_name_plural = "Themen"
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -30,8 +31,13 @@ class Modeldataset(models.Model):
     class Meta:
         verbose_name = 'Musterdatensatz'
         verbose_name_plural = 'Musterdatensätze'
+        ordering = ['title']
 
     def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
         return self.modelsubject.title + " - " + self.title
 
 
@@ -92,7 +98,7 @@ class Dataset(models.Model):
     metadata_updated_at = models.DateTimeField(verbose_name="metadaten_geändert_am", null=True)
     metadata_generated_at = models.DateTimeField(verbose_name="metadaten_generiert", null=True)
 
-    modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
+    modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT, related_name="datasets")
     city = models.ForeignKey(to=City, on_delete=models.PROTECT)
     license = models.ForeignKey(to=License, on_delete=models.PROTECT)
 
@@ -102,6 +108,7 @@ class Dataset(models.Model):
     class Meta:
         verbose_name = 'Datensatz'
         verbose_name_plural = 'Datensätze'
+        ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -117,6 +124,7 @@ class Score(models.Model):
     class Meta:
         verbose_name = "Bewertung"
         verbose_name_plural = "Bewertungen"
+        ordering = ['id']
 
     def __str__(self):
         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.modeldataset.title
