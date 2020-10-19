@@ -1,6 +1,6 @@
 from musterdaten.test import TestCase
 
-from musterdaten.forms import ScoreForm
+from crowdsourcing.forms import ScoreForm
 
 from musterdaten.tests.factories import (
     DatasetFactory,

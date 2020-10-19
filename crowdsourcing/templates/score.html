@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load misc %}
 {% block content %}
  <main class="space-y-8 max-w-2xl mx-auto">
       <!-- Page Heading -->
@@ -15,8 +16,7 @@
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
         <h1 class="text-xl leading-6">
-          Wahlgebietseinteilung <br />
-          Düsseldorf - Bundestagswahlen
+          {{dataset.title}}
         </h1>
       </header>
 
@@ -33,7 +33,7 @@
         </svg>
 
         <div class="pb-8">
-          <span class="block text-white text-xl leading-9">Wahlbezirke</span>
+          <span class="block text-white text-xl leading-9">{{dataset.modeldataset.moelsubject}}</span>
           <span class="block text-white text-2sm leading-6">Ist das der korrekte Bereich?</span>
 
           <div class="flex items-center justify-between">
@@ -69,19 +69,7 @@
       <!-- Descriptions -->
       <div class="px-2 space-y-0.5 pb-2">
         <!-- Titel -->
-        <div class="px-6 py-5 bg-white">
-          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Titel</span>
-          <svg
-            class="w-9 h-6 text-black"
-            viewBox="0 0 48 24"
-            shape-rendering="crispEdges"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
-          </svg>
-          <p class="leading-5">Wahlgebietseinteilung Düsseldorf - Bundestagswahlen</p>
-        </div>
-
+        {% include "data-entry.html" with title="Titel" text=dataset.title %}
         <!-- Beschreibung einklappen -->
         <div class="relative px-6 py-5 bg-white">
           <!-- Close button -->
@@ -138,10 +126,10 @@
             <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
           </svg>
           <p class="leading-5">
-            Der Datensatz enthält die Düsseldorfer Wahlgebietseinteilung für Bundestagswahlen. Das Wahlgebiet - sprich
-            die Bundesrepublik Deutschland - wird zur Durchführung der Bundestagswahl in insgesamt 299 ...
+            {{dataset.description}}
           </p>
         </div>
+        {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
       </div>
     </main>
 {% endblock %}

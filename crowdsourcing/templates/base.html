@@ -77,10 +77,8 @@
   </div>
 
   <main class="-mt-32 ">
-    <div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8{% block container_class %}{% endblock %}">
-      <div class="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-        {% block content %}{% endblock %}
-      </div>
+    <div class="max-w-7xl mx-auto pb-12 {% block container_class %}{% endblock %}">
+      {% block content %}{% endblock %}
     </div>
   </main>
 </div>
