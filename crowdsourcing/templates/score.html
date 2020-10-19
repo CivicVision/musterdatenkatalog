@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+ <main class="space-y-8 max-w-2xl mx-auto">
+      <!-- Page Heading -->
+      <header class="px-8 bg-white py-8">
+        <span class="uppercase text-primary-blue text-2sm font-medium leading-6"
+          >Regierung und öffentlicher Sektor</span
+        >
+        <svg
+          class="w-9 h-6 text-black"
+          viewBox="0 0 48 24"
+          shape-rendering="crispEdges"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
+        </svg>
+        <h1 class="text-xl leading-6">
+          Wahlgebietseinteilung <br />
+          Düsseldorf - Bundestagswahlen
+        </h1>
+      </header>
+
+      <!-- Topic Suggestion -->
+      <div class="px-8">
+        <span class="text-2sm text-white leading-5">Das Machine Learning Modell schlägt vor:</span>
+        <svg
+          class="w-9 h-6 text-white"
+          viewBox="0 0 48 24"
+          shape-rendering="crispEdges"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
+        </svg>
+
+        <div class="pb-8">
+          <span class="block text-white text-xl leading-9">Wahlbezirke</span>
+          <span class="block text-white text-2sm leading-6">Ist das der korrekte Bereich?</span>
+
+          <div class="flex items-center justify-between">
+            <button
+              class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
+            >
+              Ja
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
+              >
+                <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+              </svg>
+            </button>
+
+            <button
+              class="group mt-5 relative uppercase w-28 py-2 text-white text-lg shadow-button bg-black rounded-full hover:bg-white hover:text-black transition ease-in-out duration-150"
+            >
+              Nein
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-white group-hover:text-black transition-colors ease-in-out duration-150"
+              >
+                <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Descriptions -->
+      <div class="px-2 space-y-0.5 pb-2">
+        <!-- Titel -->
+        <div class="px-6 py-5 bg-white">
+          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Titel</span>
+          <svg
+            class="w-9 h-6 text-black"
+            viewBox="0 0 48 24"
+            shape-rendering="crispEdges"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+          </svg>
+          <p class="leading-5">Wahlgebietseinteilung Düsseldorf - Bundestagswahlen</p>
+        </div>
+
+        <!-- Beschreibung einklappen -->
+        <div class="relative px-6 py-5 bg-white">
+          <!-- Close button -->
+          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
+             <!-- Customized Heroicon Plus -->
+            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-width="3" d="M20 12H4" />
+            </svg>
+          </button>
+
+          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Beschreibung</span>
+          <svg
+            class="w-9 h-6 text-black"
+            viewBox="0 0 48 24"
+            shape-rendering="crispEdges"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+          </svg>
+          <p class="leading-5">
+            Der Datensatz enthält die Düsseldorfer Wahlgebietseinteilung für Bundestagswahlen. Das Wahlgebiet - sprich
+            die Bundesrepublik Deutschland - wird zur Durchführung der Bundestagswahl in insgesamt 299 Wahlkreise
+            eingeteilt. Die Stadt Düsseldorf bildet die Wahlkreise 106 Düsseldorf I und 107 Düsseldorf II. Für jeden
+            Wahlkreis zieht ein Direktkandidat in den Bundestag ein. Entsprechende Datensätze enthalten Informationen
+            über die Ergebnisse der Bundestagswahl 2013 und der Bundestagswahl 2017, sowie über die
+            Stimmbezirkseinteilung.Weitere Informationen zu Begrifflichkeiten aus dem Bereich 'Wahlen' finden Sie im
+            Wahl-ABC der interaktiven Lernplattform für Wahlhelferinnen und Wahlhelfer der Stadt Düsseldorf.
+          </p>
+        </div>
+
+        <!-- Beschreibung ausklappen -->
+        <div class="relative px-6 py-5 bg-white">
+          <!-- Close button -->
+          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
+            <!-- Customized Heroicon Plus -->
+            <svg
+              class="w-8 h-8 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </button>
+
+          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Beschreibung</span>
+          <svg
+            class="w-9 h-6 text-black"
+            viewBox="0 0 48 24"
+            shape-rendering="crispEdges"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+          </svg>
+          <p class="leading-5">
+            Der Datensatz enthält die Düsseldorfer Wahlgebietseinteilung für Bundestagswahlen. Das Wahlgebiet - sprich
+            die Bundesrepublik Deutschland - wird zur Durchführung der Bundestagswahl in insgesamt 299 ...
+          </p>
+        </div>
+      </div>
+    </main>
+{% endblock %}

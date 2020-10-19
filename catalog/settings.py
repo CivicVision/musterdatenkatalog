@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'musterdaten',
     'api',
+    'tailwind',
+    'crowdsourcing',
 ]
 
 MIDDLEWARE = [
@@ -111,5 +113,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+TAILWIND_APP_NAME = 'crowdsourcing'
 
 django_heroku.settings(locals())

@@ -14,3 +14,4 @@ factory_boy
 django-test-plus
 pytest
 pytest-cov
+django-tailwind

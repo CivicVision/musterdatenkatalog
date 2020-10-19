@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView, TemplateView
 
-from musterdaten.forms import ScoreForm
+from crowdsourcing.forms import ScoreForm
 from musterdaten.models import Dataset, Modeldataset
 
 class IndexView(TemplateView):
@@ -15,8 +15,8 @@ class UeberView(TemplateView):
 
 class EvaluateFormView(FormView):
     form_class = ScoreForm
-    success_url = reverse_lazy('musterdaten:evaluate')
-    template_name = 'evaluate_formview.html'
+    success_url = reverse_lazy('crowdsourcing:evaluate')
+    template_name = 'score.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
