@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
+{% block content %}
+<main class="px-2 py-16 space-y-12 max-w-2xl mx-auto">
+  <div class="px-6">
+    <h2 class="text-white text-2lg leading-6">Wählen Sie Ihren Bereich.</h2>
+  </div>
+
+  <!-- Topics -->
+  <div class="space-y-0.5">
+    <!-- Single selected topic -->
+    <div class="px-6 py-3 bg-white">
+      <span class="block text-xs font-medium leading-6">Aktuelles Thema</span>
+      <span class="block text-2lg leading-8">{{modelsubject}}</span>
+    </div>
+
+    {% for modeldataset in object_list %}
+    <a href="/score" class="block px-12 py-4 bg-white bg-opacity-20">
+      <span class="text-white text-2lg leading-9">{{modeldataset.title }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

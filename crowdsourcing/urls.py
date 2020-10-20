@@ -1,11 +1,14 @@
 from django.urls import path
 
-from crowdsourcing.views import IndexView, UeberView, EvaluateFormView
+from crowdsourcing.views import IndexView, UeberView, Top3SubjectView, ModelsubjectDatasetView, EvaluateFormView, AllSubjectsView
 
 app_name = 'crowdsourcing'
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('ueber/', UeberView.as_view(), name='ueber'),
-    path('evaluate/', EvaluateFormView.as_view(), name='evaluate'),
+    path('score/top3_subject/<int:pk>/', Top3SubjectView.as_view(), name='top3_subject'),
+    path('score/thema/<int:pk>/', ModelsubjectDatasetView.as_view(), name='modelsubject_modeldatasets'),
+    path('score/all_subjects/', AllSubjectsView.as_view(), name='all_subjects'),
+    path('score/', EvaluateFormView.as_view(), name='evaluate'),
 ]

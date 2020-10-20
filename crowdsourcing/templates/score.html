@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
 {% load misc %}
 {% block content %}
  <main class="space-y-8 max-w-2xl mx-auto">
       <!-- Page Heading -->
       <header class="px-8 bg-white py-8">
         <span class="uppercase text-primary-blue text-2sm font-medium leading-6"
-          >Regierung und öffentlicher Sektor</span
-        >
+          >{{ dataset.categories.all|join_by_attr:'title'}}
+        </span>
         <svg
           class="w-9 h-6 text-black"
           viewBox="0 0 48 24"
@@ -32,12 +33,34 @@
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
 
-        <div class="pb-8">
-          <span class="block text-white text-xl leading-9">{{dataset.modeldataset.moelsubject}}</span>
-          <span class="block text-white text-2sm leading-6">Ist das der korrekte Bereich?</span>
+        <div class="pb-8" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
+          <div class="block text-white text-2xl font-semibold leading-9">
+            <span class="" x-show.transition.opacity="!modeldataset">{{modeldataset.modelsubject}}</span>
+            <span x-cloak class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
+          </div>
+          <span class="block text-gray-200 font-light text-2sm leading-6" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
+          <span x-cloak class="block hide text-gray-200 font-light text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
 
           <div class="flex items-center justify-between">
+            <form x-bind:action="yes_action" action="">
+              <button
+                x-on:click.prevent="modeldataset = true; yes_action='/score', no_action='/score/thema/{{modeldataset.modelsubject.id}}'"
+                x-show="!modeldataset"
+                class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
+            >
+              Ja
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
+              >
+                <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+              </svg>
+            </button>
             <button
+              x-cloak
+              x-show="modeldataset"
+              type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
             >
               Ja
@@ -49,8 +72,9 @@
                 <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
               </svg>
             </button>
-
-            <button
+          </form>
+          <form x-bind:action="no_action" action="">
+            <button type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-white text-lg shadow-button bg-black rounded-full hover:bg-white hover:text-black transition ease-in-out duration-150"
             >
               Nein
@@ -62,6 +86,7 @@
                 <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
               </svg>
             </button>
+          </form>
           </div>
         </div>
       </div>
@@ -71,12 +96,13 @@
         <!-- Titel -->
         {% include "data-entry.html" with title="Titel" text=dataset.title %}
         <!-- Beschreibung einklappen -->
-        <div class="relative px-6 py-5 bg-white">
+        <div class="relative px-6 py-5 bg-white" x-data="{show: false }">
           <!-- Close button -->
-          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
+          <button @click="show = !show" class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
              <!-- Customized Heroicon Plus -->
             <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-width="3" d="M20 12H4" />
+              <path x-show="show" stroke-width="3" d="M20 12H4" />
+              <path x-show="!show" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
           </button>
 
@@ -89,46 +115,11 @@
           >
             <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
           </svg>
-          <p class="leading-5">
-            Der Datensatz enthält die Düsseldorfer Wahlgebietseinteilung für Bundestagswahlen. Das Wahlgebiet - sprich
-            die Bundesrepublik Deutschland - wird zur Durchführung der Bundestagswahl in insgesamt 299 Wahlkreise
-            eingeteilt. Die Stadt Düsseldorf bildet die Wahlkreise 106 Düsseldorf I und 107 Düsseldorf II. Für jeden
-            Wahlkreis zieht ein Direktkandidat in den Bundestag ein. Entsprechende Datensätze enthalten Informationen
-            über die Ergebnisse der Bundestagswahl 2013 und der Bundestagswahl 2017, sowie über die
-            Stimmbezirkseinteilung.Weitere Informationen zu Begrifflichkeiten aus dem Bereich 'Wahlen' finden Sie im
-            Wahl-ABC der interaktiven Lernplattform für Wahlhelferinnen und Wahlhelfer der Stadt Düsseldorf.
-          </p>
+          <div class="leading-5">
+            {{dataset.description | safe }}
+          </div>
         </div>
 
-        <!-- Beschreibung ausklappen -->
-        <div class="relative px-6 py-5 bg-white">
-          <!-- Close button -->
-          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
-            <!-- Customized Heroicon Plus -->
-            <svg
-              class="w-8 h-8 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </button>
-
-          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Beschreibung</span>
-          <svg
-            class="w-9 h-6 text-black"
-            viewBox="0 0 48 24"
-            shape-rendering="crispEdges"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
-          </svg>
-          <p class="leading-5">
-            {{dataset.description}}
-          </p>
-        </div>
         {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
       </div>
     </main>

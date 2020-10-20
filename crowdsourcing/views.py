@@ -2,16 +2,52 @@ import uuid
 
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import FormView, CreateView, TemplateView
+from django.views.generic import FormView, CreateView, TemplateView, DetailView, ListView
+from django.views.generic.detail import SingleObjectMixin
 
 from crowdsourcing.forms import ScoreForm
-from musterdaten.models import Dataset, Modeldataset
+from musterdaten.models import Dataset, Modeldataset, Modelsubject
 
 class IndexView(TemplateView):
     template_name = "index.html"
 
+
 class UeberView(TemplateView):
     template_name = "ueber.html"
+
+
+class AllSubjectsView(ListView):
+    template_name = "all_subjects.html"
+
+    queryset = Modelsubject.objects.select_related()
+
+
+class Top3SubjectView(DetailView):
+    template_name = "top3_subject.html"
+
+    queryset = Dataset.objects.select_related()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        modelsubjects = self.object.top_3.select_related('modelsubject').values_list('modelsubject__id', flat=True)
+        context['modelsubjects'] = Modelsubject.objects.filter(id__in=modelsubjects).distinct()
+        return context
+
+class ModelsubjectDatasetView(SingleObjectMixin, ListView):
+    template_name = "modeldatasets_for_modelsubject.html"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Modelsubject.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['modelsubject'] = self.object
+        return context
+
+    def get_queryset(self):
+        return self.object.modeldataset_set.all()
+
 
 class EvaluateFormView(FormView):
     form_class = ScoreForm

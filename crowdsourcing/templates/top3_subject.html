@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
+{% block content %}
+<main class="px-2 py-16 space-y-12 max-w-2xl mx-auto">
+  <div class="px-6">
+    <h2 class="text-white text-2lg leading-6">Vielleicht eines dieser Themen?</h2>
+  </div>
+
+  <!-- Topics -->
+  <div class="space-y-0.5">
+    {% for modelsubject in modelsubjects %}
+    <div class="px-6 py-5 bg-white bg-opacity-20">
+      <span class="block text-white text-2lg leading-9">{{ modelsubject }}</span>
+      <span class="block text-white text-2sm leading-6">Ist das das korrekte Thema?</span>
+      <form action="/score/thema/{{modelsubject.pk}}">
+      <button type="submit"
+        class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
+        >
+        Ja
+        <svg
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
+          >
+          <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+        </svg>
+      </button>
+    </form>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+  <!-- Unterer Button -->
+  <div class="text-center pb-12">
+    <form action="/score/all_subjects/">
+    <button type="submit"
+      class="group relative uppercase text-lg shadow-button bg-black rounded-full px-4 w-80 py-2.5 text-white hover:bg-white hover:text-black transition-colors ease-in-out duration-150"
+      >
+      Leider keines davon
+      <svg
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-white group-hover:text-black transition-colors ease-in-out duration-150"
+        >
+        <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+      </svg>
+    </button>
+    </form>
+  </div>
+</main>
+{% endblock %}
