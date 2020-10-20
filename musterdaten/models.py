@@ -103,7 +103,7 @@ class Dataset(models.Model):
     license = models.ForeignKey(to=License, on_delete=models.PROTECT)
 
     categories = models.ManyToManyField(to=Category)
-    top_3 = models.ManyToManyField(to=Modeldataset, related_name="dataset_top3")
+    top_3 = models.ManyToManyField(to=Modeldataset, through="Top3")
 
     class Meta:
         verbose_name = 'Datensatz'
@@ -128,3 +128,10 @@ class Score(models.Model):
 
     def __str__(self):
         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.modeldataset.title
+
+
+class Top3(models.Model):
+    dataset = models.ForeignKey(
+        to=Dataset, on_delete=models.PROTECT, related_name="top3_modeldatasets")
+    modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
+    pred = models.FloatField()
