@@ -6,7 +6,7 @@ from musterdaten.tests.factories import (
 )
 class TestIndex(TestCase):
     def test_ok(self):
-        self.get_check_200("musterdaten:index")
+        self.get_check_200("crowdsourcing:index")
 
 class TestEvaluate(TestCase):
     def test_ok(self):
@@ -14,7 +14,7 @@ class TestEvaluate(TestCase):
         modeldataset = ModeldatasetFactory()
         data = {"dataset": str(dataset.id), "modeldataset": str(modeldataset.id) }
 
-        response = self.post('musterdaten:evaluate', data=data)
+        response = self.post('crowdsourcing:evaluate', data=data)
         self.response_302(response)
 
     def test_failure(self):
@@ -22,5 +22,5 @@ class TestEvaluate(TestCase):
         modeldataset = ModeldatasetFactory()
         data = {"dataset": "stri", "modeldataset": str(modeldataset.id) }
 
-        response = self.post('musterdaten:evaluate', data=data)
+        response = self.post('crowdsourcing:evaluate', data=data)
         self.response_400(response)

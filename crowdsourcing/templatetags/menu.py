@@ -5,8 +5,8 @@ import re
 register = template.Library()
 
 MAIN_MENUE = [
-        { 'name': 'musterdaten:index', 'title': "Start", 'page_title': "Musterdatenkatalog" },
-        { 'name': 'musterdaten:ueber', 'title': "Über" },
+        { 'name': 'crowdsourcing:index', 'title': "Start", 'page_title': "Musterdatenkatalog" },
+        { 'name': 'crowdsourcing:ueber', 'title': "Über" },
         ]
 
 def create_menu(menu_item, request):
