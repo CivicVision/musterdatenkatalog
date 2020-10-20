@@ -4,6 +4,9 @@ from django.db import models
 class Modelsubject(models.Model):
     title = models.CharField(max_length=64, verbose_name="titel")
 
+    def first_letter(self):
+        return self.title and self.title[0] or ''
+
     class Meta:
         verbose_name = "Thema"
         verbose_name_plural = "Themen"

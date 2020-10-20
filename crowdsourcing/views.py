@@ -16,6 +16,12 @@ class UeberView(TemplateView):
     template_name = "ueber.html"
 
 
+class AllSubjectsView(ListView):
+    template_name = "all_subjects.html"
+
+    queryset = Modelsubject.objects.select_related()
+
+
 class Top3SubjectView(DetailView):
     template_name = "top3_subject.html"
 

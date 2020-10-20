@@ -94,12 +94,13 @@
         <!-- Titel -->
         {% include "data-entry.html" with title="Titel" text=dataset.title %}
         <!-- Beschreibung einklappen -->
-        <div class="relative px-6 py-5 bg-white">
+        <div class="relative px-6 py-5 bg-white" x-data="{show: false }">
           <!-- Close button -->
-          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
+          <button @click="show = !show" class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
              <!-- Customized Heroicon Plus -->
             <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-width="3" d="M20 12H4" />
+              <path x-show="show" stroke-width="3" d="M20 12H4" />
+              <path x-show="!show" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
           </button>
 
@@ -112,46 +113,11 @@
           >
             <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
           </svg>
-          <p class="leading-5">
-            Der Datensatz enthält die Düsseldorfer Wahlgebietseinteilung für Bundestagswahlen. Das Wahlgebiet - sprich
-            die Bundesrepublik Deutschland - wird zur Durchführung der Bundestagswahl in insgesamt 299 Wahlkreise
-            eingeteilt. Die Stadt Düsseldorf bildet die Wahlkreise 106 Düsseldorf I und 107 Düsseldorf II. Für jeden
-            Wahlkreis zieht ein Direktkandidat in den Bundestag ein. Entsprechende Datensätze enthalten Informationen
-            über die Ergebnisse der Bundestagswahl 2013 und der Bundestagswahl 2017, sowie über die
-            Stimmbezirkseinteilung.Weitere Informationen zu Begrifflichkeiten aus dem Bereich 'Wahlen' finden Sie im
-            Wahl-ABC der interaktiven Lernplattform für Wahlhelferinnen und Wahlhelfer der Stadt Düsseldorf.
-          </p>
+          <div class="leading-5">
+            {{dataset.description | safe }}
+          </div>
         </div>
 
-        <!-- Beschreibung ausklappen -->
-        <div class="relative px-6 py-5 bg-white">
-          <!-- Close button -->
-          <button class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
-            <!-- Customized Heroicon Plus -->
-            <svg
-              class="w-8 h-8 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </button>
-
-          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Beschreibung</span>
-          <svg
-            class="w-9 h-6 text-black"
-            viewBox="0 0 48 24"
-            shape-rendering="crispEdges"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
-          </svg>
-          <p class="leading-5">
-            {{dataset.description}}
-          </p>
-        </div>
         {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
       </div>
     </main>
