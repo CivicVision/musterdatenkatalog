@@ -5,6 +5,10 @@
       "generator": "secret"
     }
   },
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/ruby" }
+  ],
   "environments": {
     "review": {
       "scripts": {
