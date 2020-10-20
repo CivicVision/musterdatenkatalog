@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
 {% load misc %}
 {% block content %}
  <main class="space-y-8 max-w-2xl mx-auto">
@@ -33,12 +34,12 @@
         </svg>
 
         <div class="pb-8" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
-          <div class="block text-white text-xl leading-9">
+          <div class="block text-white text-2xl font-semibold leading-9">
             <span class="" x-show.transition.opacity="!modeldataset">{{modeldataset.modelsubject}}</span>
-            <span class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
+            <span x-cloak class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
           </div>
-          <span class="block text-white text-2sm leading-6" x-show="!modeldataset">Ist das das korrekte Thema?</span>
-          <span class="block hide text-white text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
+          <span class="block text-gray-200 font-light text-2sm leading-6" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
+          <span x-cloak class="block hide text-gray-200 font-light text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
 
           <div class="flex items-center justify-between">
             <form x-bind:action="yes_action" action="">
@@ -57,6 +58,7 @@
               </svg>
             </button>
             <button
+              x-cloak
               x-show="modeldataset"
               type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"

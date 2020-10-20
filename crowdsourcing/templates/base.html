@@ -21,66 +21,10 @@
     {% endblock %}
   </head>
   {% load menu %}
-  <body class="">
-<div class="font-sans bg-primary-blue relative">
-  <div class="pb-32">
-    <nav class="">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="border-b border-gray-700">
-          <div class="flex items-center justify-between h-16 px-4 sm:px-0">
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-              </div>
-              <div class="hidden md:block">
-                <div class="ml-10 flex items-baseline">
-                  {% show_main_menu 'ml-4' %}
-                </div>
-              </div>
-            </div>
-            <div class="hidden md:block">
-            </div>
-            <div class="-mr-2 flex md:hidden">
-              <!-- Mobile menu button -->
-              <button class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
-                <!-- Menu open: "hidden", Menu closed: "block" -->
-                <svg class="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <!-- Menu open: "block", Menu closed: "hidden" -->
-                <svg class="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!--
-        Mobile menu, toggle classes based on menu state.
-
-        Open: "block", closed: "hidden"
-      -->
-      <div class="block border-b border-gray-700 md:hidden">
-        <div class="px-2 py-3 sm:px-3">
-          {% show_main_menu 'block mt-1' %}
-        </div>
-      </div>
-    </nav>
-    <header class="py-10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl leading-9 font-bold text-white">
-          {% main_title request %}
-        </h1>
-      </div>
-    </header>
-  </div>
-
-  <main class="-mt-32 ">
-    <div class="max-w-7xl mx-auto pb-12 {% block container_class %}{% endblock %}">
+  <body class="{% block body_class %}{% endblock %}">
+    <div class="{% block container_class %}flex-grow overflow-y-auto {% endblock %}">
       {% block content %}{% endblock %}
     </div>
-  </main>
 </div>
   </body>
 </html>

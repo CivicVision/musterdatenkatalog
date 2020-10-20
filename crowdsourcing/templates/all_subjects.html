@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load misc %}
+{% block container_class%} min-h-screen relative flex flex-col {% endblock %}
+{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
 {% block content %}
-<main class="flex-grow relative px-2 space-y-2 max-w-2xl mx-auto flex flex-col">
+<main class="flex-grow relative px-2 space-y-2 max-w-2xl md:mx-auto flex flex-col">
   <header class="space-y-6">
     <!-- Search input and heading -->
     <div class="mt-8 mx-auto flex flex-col items-center space-y-6">
@@ -68,7 +70,7 @@
   </header>
 
   <!-- Topics -->
-  <div class="pt-2 flex-grow overflow-y-auto space-y-0.5">
+  <div class="pt-2 h-0 flex-grow overflow-y-auto space-y-0.5">
     {% regroup object_list by first_letter as letter_list %}
     {% for letter in letter_list %}
     <!-- A -->
