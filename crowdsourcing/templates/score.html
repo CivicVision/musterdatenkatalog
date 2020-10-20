@@ -32,13 +32,33 @@
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
 
-        <div class="pb-8">
-          <span class="block text-white text-xl leading-9">{{modeldataset.modelsubject}}</span>
-          <span class="block text-white text-2sm leading-6">Ist das der korrekte Bereich?</span>
+        <div class="pb-8" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
+          <div class="block text-white text-xl leading-9">
+            <span class="" x-show.transition.opacity="!modeldataset">{{modeldataset.modelsubject}}</span>
+            <span class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
+          </div>
+          <span class="block text-white text-2sm leading-6" x-show="!modeldataset">Ist das das korrekte Thema?</span>
+          <span class="block hide text-white text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
 
           <div class="flex items-center justify-between">
-            <form action="/score">
+            <form x-bind:action="yes_action" action="">
+              <button
+                x-on:click.prevent="modeldataset = true; yes_action='/score', no_action='/score/thema/{{modeldataset.modelsubject.id}}'"
+                x-show="!modeldataset"
+                class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
+            >
+              Ja
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
+              >
+                <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+              </svg>
+            </button>
             <button
+              x-show="modeldataset"
+              type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
             >
               Ja
@@ -51,7 +71,7 @@
               </svg>
             </button>
           </form>
-          <form action="/score/top3_subject/{{dataset.pk}}">
+          <form x-bind:action="no_action" action="">
             <button type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-white text-lg shadow-button bg-black rounded-full hover:bg-white hover:text-black transition ease-in-out duration-150"
             >
