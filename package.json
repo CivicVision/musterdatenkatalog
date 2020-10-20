@@ -1,14 +1,17 @@
 {
-	"name": "musterdatenkatalog",
-	"description": "",
-	"scripts": {
-	},
-	"keywords": [],
-	"author": "Mila Frerichs",
-	"license": "MIT",
-	"dependencies": {
-		"tailwindcss": "^1.6.2",
-		"@tailwindcss/ui": "^0.6.2",
-		"autoprefixer": "^9.8.6"
-	}
+  "name": "musterdatenkatalog",
+  "description": "",
+  "scripts": {
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "keywords": [],
+  "author": "Mila Frerichs",
+  "license": "MIT",
+  "dependencies": {
+    "tailwindcss": "^1.6.2",
+    "@tailwindcss/ui": "^0.6.2",
+    "autoprefixer": "^9.8.6"
+  }
 }
