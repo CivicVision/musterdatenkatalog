@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'api',
     'tailwind',
     'crowdsourcing',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
