@@ -71,7 +71,7 @@
 
   <!-- Topics -->
   <div class="pt-2 h-0 flex-grow overflow-y-auto space-y-0.5">
-    {% regroup object_list by first_letter as letter_list %}
+    {% regroup modelsubjects by first_letter as letter_list %}
     {% for letter in letter_list %}
     <!-- A -->
     <a name="{{ letter.grouper }}"></a>

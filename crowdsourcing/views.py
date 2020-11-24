@@ -1,12 +1,14 @@
 import uuid
 
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView, TemplateView, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
+from formtools.wizard.views import SessionWizardView
 
-from crowdsourcing.forms import ScoreForm
-from musterdaten.models import Dataset, Modeldataset, Modelsubject
+from crowdsourcing.forms import ScoreForm, EvaluateWizardFirstStepForm ,Top3Form, ModelsubjectsForm, ModeldatasetsForm
+from musterdaten.models import Dataset, Modeldataset, Modelsubject, Score
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -48,33 +50,139 @@ class ModelsubjectDatasetView(SingleObjectMixin, ListView):
     def get_queryset(self):
         return self.object.modeldataset_set.all()
 
+FORMS = [("dataset", EvaluateWizardFirstStepForm),
+         ("top3", Top3Form),
+         ("modelsubjects", ModelsubjectsForm),
+         ("modeldatasets", ModeldatasetsForm)]
 
-class EvaluateFormView(FormView):
-    form_class = ScoreForm
-    success_url = reverse_lazy('crowdsourcing:evaluate')
-    template_name = 'score.html'
+TEMPLATES = {"dataset": "score.html",
+             "top3": "top3_subject.html",
+             "modelsubjects": "all_subjects.html",
+             "modeldatasets": "modeldatasets_for_modelsubject.html"}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        dataset = Dataset.objects.order_by('?').first()
-        context["dataset"] = dataset
-        context["modeldataset"] = dataset.modeldataset
-        context["top_3"] = dataset.top_3
-        context["all_modeldatasets"] = Modeldataset.objects.all()
+def show_top3(wizard):
+    cleaned_data_step_one = wizard.storage.get_step_data('dataset') or {}
+    return not cleaned_data_step_one.get('dataset-modelsubject_correct') == 'on'
+
+
+def show_all_modelsubjects(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('top3') or {}
+    if not cleaned_data:
+        return False
+    return not cleaned_data.get('top_3')
+
+
+def show_modeldatasets_for_modelsubjects(wizard):
+    cleaned_data_step_one = wizard.storage.get_step_data('dataset') or {}
+    return not cleaned_data_step_one.get('dataset-modeldataset_correct') == 'on' and not cleaned_data_step_one.get('dataset-modelsubject_correct') == 'on'
+
+
+class EvaluateFormView(SessionWizardView):
+    condition_dict = {
+        'dataset': True,
+        'top3': show_top3,
+        'modelsubjects': show_all_modelsubjects,
+        'modeldatasets': show_modeldatasets_for_modelsubjects
+    }
+
+    def get_template_names(self):
+        return [TEMPLATES[self.steps.current]]
+
+    def done(self, form_list, **kwargs):
+        data_step_one = self.get_cleaned_data_for_step('dataset') or {}
+
+        dataset_id = data_step_one.get('dataset_id')
+        if data_step_one.get('modeldataset_correct'):
+            modeldataset = data_step_one.get('modeldataset')
+        else:
+            data_step_four = self.get_cleaned_data_for_step('modeldatasets')
+            modeldataset = data_step_four.get('all_modeldatasets')
+
+        Score.objects.create(
+            dataset_id=dataset_id,
+            modeldataset=modeldataset,
+            session_id=uuid.uuid4().__str__()[:32]
+        )
+
+        return HttpResponseRedirect(reverse_lazy("crowdsourcing:evaluate"))
+
+    def get_dataset_by_id(self, pk):
+        return Dataset.objects.get(pk=pk)
+
+    def get_dataset(self):
+        if 'dataset_id' in self.storage.extra_data:
+            return self.get_dataset_by_id(self.storage.extra_data.get('dataset_id'))
+        return Dataset.objects.order_by('?').first()
+
+    def get_context_data(self, form, **kwargs):
+        context = super().get_context_data(form=form, **kwargs)
+        print(context)
+        if self.steps.current == 'dataset':
+            dataset = self.get_dataset_by_id(context.get('dataset_id'))
+            context.update({
+                'dataset': dataset,
+                'modeldataset': dataset.modeldataset
+                })
+        if self.steps.current == 'top3':
+            dataset = self.get_dataset_by_id(context.get('dataset_id'))
+            modelsubjects = dataset.top_3.select_related('modelsubject').values_list('modelsubject__id', flat=True)
+            context.update({
+                'modelsubjects': Modelsubject.objects.filter(id__in=modelsubjects).distinct()
+            })
+        if self.steps.current == 'modelsubjects':
+            context.update({
+                'modelsubjects': Modelsubject.objects.select_related().all()
+            })
         return context
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.session_id = uuid.uuid4().__str__()[:32]
-        self.object.dataset = form.cleaned_data.get('dataset')
-        self.object.modeldataset = form.cleaned_data.get('modeldataset')
-        self.object.save()
+    def get_form(self, step=None, data=None, files=None):
+        print(step)
+        dataset = self.get_dataset()
+        kwargs = self.get_form_kwargs(step)
 
-        messages.success(self.request, 'Score added successfully!')
+        if step == 'top3':
+            # update the top_3 queryset to only show entries related to the dataset
 
-        return super().form_valid(form)
+            form_class = self.form_list[step]
+            kwargs.update({
+                'data': data,
+                'files': files,
+                'prefix': self.get_form_prefix(step, form_class),
+                'initial': self.get_form_initial(step),
+                'top_3_queryset': dataset.top_3.all()
+            })
+            return form_class(**kwargs)
 
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        response.status_code = 400
-        return response
+        elif step == 'modeldatasets':
+            # update the modeldatasets queryset to only show entries related to the chosen modelsubject
+
+            form_class = self.form_list[step]
+            step_three_data = self.get_cleaned_data_for_step('modelsubjects')
+            if step_three_data:
+                modelsubject = step_three_data.get('all_modelsubjects')
+            else:
+                step_one_data = self.get_cleaned_data_for_step('dataset')
+                ## need to get the modeldataset some other way or 
+                modelsubject = step_one_data.get('modelsubject')
+
+            kwargs.update({
+                'data': data,
+                'files': files,
+                'prefix': self.get_form_prefix(step, form_class),
+                'initial': self.get_form_initial(step),
+                'all_modeldatasets': modelsubject.modeldataset_set.all()
+            })
+            return form_class(**kwargs)
+
+        return super(EvaluateFormView, self).get_form(step, data, files)
+
+    def get_form_initial(self, step):
+        initial = {}
+        if step == 'dataset':
+            dataset = self.get_dataset()
+            self.storage.extra_data = {'dataset_id': dataset.pk}
+            initial['dataset_id'] = dataset.pk
+            initial['dataset'] = dataset
+            initial['modelsubject'] = dataset.modeldataset.modelsubject
+            initial['modeldataset'] = dataset.modeldataset
+        return self.initial_dict.get(step, initial)

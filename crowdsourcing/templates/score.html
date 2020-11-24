@@ -2,7 +2,7 @@
 {% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
 {% load misc %}
 {% block content %}
- <main class="space-y-8 max-w-2xl mx-auto">
+<main class="space-y-8 max-w-2xl mx-auto">
       <!-- Page Heading -->
       <header class="px-8 bg-white py-8">
         <span class="uppercase text-primary-blue text-2sm font-medium leading-6"
@@ -33,7 +33,7 @@
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
 
-        <div class="pb-8" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
+        <div class="pb-8" x-data="{ modelsubject: false, modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
           <div class="block text-white text-2xl font-semibold leading-9">
             <span class="" x-show.transition.opacity="!modeldataset">{{modeldataset.modelsubject}}</span>
             <span x-cloak class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
@@ -42,7 +42,18 @@
           <span x-cloak class="block hide text-gray-200 font-light text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
 
           <div class="flex items-center justify-between">
-            <form x-bind:action="yes_action" action="">
+            <form x-ref="foo" action="" method="post">{% csrf_token %}
+              <div class="hidden">
+              {{ wizard.management_form }}
+              {% if wizard.form.forms %}
+                  {{ wizard.form.management_form }}
+                  {% for form in wizard.form.forms %}
+                      {{ form }}
+                  {% endfor %}
+              {% else %}
+                  {{ wizard.form }}
+              {% endif %}
+              </div>
               <button
                 x-on:click.prevent="modeldataset = true; yes_action='/score', no_action='/score/thema/{{modeldataset.modelsubject.id}}'"
                 x-show="!modeldataset"
@@ -59,6 +70,10 @@
             </button>
             <button
               x-cloak
+              x-on:click.prevent="
+                modelsubject= true;
+                $nextTick(() => { $refs.foo.submit() });
+              "
               x-show="modeldataset"
               type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
@@ -72,8 +87,6 @@
                 <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
               </svg>
             </button>
-          </form>
-          <form x-bind:action="no_action" action="">
             <button type="submit"
               class="group mt-5 relative uppercase w-28 py-2 text-white text-lg shadow-button bg-black rounded-full hover:bg-white hover:text-black transition ease-in-out duration-150"
             >

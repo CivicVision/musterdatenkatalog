@@ -32,7 +32,18 @@
   </div>
   <!-- Unterer Button -->
   <div class="text-center pb-12">
-    <form action="/score/all_subjects/">
+  <form action="" method="post">{% csrf_token %}
+    <div class="hidden">
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+        {{ wizard.form.management_form }}
+        {% for form in wizard.form.forms %}
+            {{ form }}
+        {% endfor %}
+    {% else %}
+        {{ wizard.form }}
+    {% endif %}
+    </div>
     <button type="submit"
       class="group relative uppercase text-lg shadow-button bg-black rounded-full px-4 w-80 py-2.5 text-white hover:bg-white hover:text-black transition-colors ease-in-out duration-150"
       >
