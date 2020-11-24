@@ -16,3 +16,4 @@ pytest
 pytest-cov
 django-tailwind
 whitenoise
+django-extensions
