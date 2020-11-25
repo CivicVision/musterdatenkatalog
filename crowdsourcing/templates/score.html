@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
+{% block body_class %} relative font-sans bg-primary-blue {% endblock %}
 {% load misc %}
 {% block content %}
- <main class="space-y-8 max-w-2xl mx-auto">
+ <main class="space-y-8 md:space-y-0">
       <!-- Page Heading -->
-      <header class="px-8 bg-white py-8">
-        <span class="uppercase text-primary-blue text-2sm font-medium leading-6"
+      <div class="bg-white">
+      <header class="max-w-4xl px-8 py-8 mx-auto md:py-10">
+        <span class="text-sm font-medium leading-6 uppercase md:text-xl text-primary-blue"
           >{{ dataset.categories.all|join_by_attr:'title'}}
         </span>
         <svg
@@ -16,16 +17,19 @@
         >
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
-        <h1 class="text-xl leading-6">
+        <h1 class="text-xl leading-6 md:text-7xl md:font-medium break-words">
           {{dataset.title}}
         </h1>
       </header>
+      </div>
 
+      <div class="bg-primary-blue">
+        <div class="max-w-4xl mx-auto md:space-y-8 md:bg-white md:bg-opacity-10 md:py-8">
       <!-- Topic Suggestion -->
       <div class="px-8">
-        <span class="text-2sm text-white leading-5">Das Machine Learning Modell schlägt vor:</span>
+        <span class="text-sm leading-5 text-white md:text-xl">Das Machine Learning Modell schlägt vor:</span>
         <svg
-          class="w-9 h-6 text-white"
+          class="h-6 text-white md:h-8 w-9"
           viewBox="0 0 48 24"
           shape-rendering="crispEdges"
           xmlns="http://www.w3.org/2000/svg"
@@ -33,66 +37,186 @@
           <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
         </svg>
 
-        <div class="pb-8" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
-          <div class="block text-white text-2xl font-semibold leading-9">
-            <span class="" x-show.transition.opacity="!modeldataset">{{modeldataset.modelsubject}}</span>
-            <span x-cloak class="hide" x-show.transition.opacity="modeldataset">{{modeldataset.title}}</span>
+        <div class="pb-4" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
+          <div class="block text-xl leading-5 text-white md:text-7xl md:font-medium">
+            <span
+              class=""
+              x-show="!modeldataset"
+              x-transition:leave="transition transform ease-out duration-1000"
+              x-transition:leave-start="opacity-100 translate-x-0"
+              x-transition:leave-end="opacity-0 -translate-x-full"
+            >{{modeldataset.modelsubject}}</span>
+            <span
+              x-cloak
+              class="hide"
+              x-show="modeldataset"
+              x-transition:enter="transition transform ease-out duration-1000"
+              x-transition:enter-start="opacity-0 translate-x-full"
+              x-transition:enter-end="opacity-100 translate-x-0"
+            >{{modeldataset.title}}</span>
+            <!-- Probability with question Icon -->
+              <div class="flex items-center space-x-4" x-show="!modeldataset">
+                <span class="inline-flex items-baseline justify-center text-xs leading-7 font-normal text-white md:text-xl mt-2"
+                  >60% Wahrscheinlichkeit
+                </span>
+                <button
+                  aria-label="Erklärung zur Wahrscheinlichkeit"
+                  class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
+                >
+                  <svg
+                    class="self-center w-6 h-6 text-white md:h-8 md:w-8"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
           </div>
-          <span class="block text-gray-200 font-light text-2sm leading-6" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
-          <span x-cloak class="block hide text-gray-200 font-light text-2sm leading-6" x-show="modeldataset">Ist das der korrekte Bereich?</span>
+          <div class="realtive">
+            <span class="block mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
+            <span x-cloak class="block hide mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="modeldataset">Ist das der korrekte <strong class="text-white font-normal">Bereich</strong>?</span>
+          </div>
 
-          <div class="flex items-center justify-between">
-            <form x-bind:action="yes_action" action="">
+          <form x-bind:action="yes_action" action="">
+            <div class="flex items-center justify-between mt-2 md:mt-4 md:justify-start md:space-x-14">
               <button
                 x-on:click.prevent="modeldataset = true; yes_action='/score', no_action='/score/thema/{{modeldataset.modelsubject.id}}'"
                 x-show="!modeldataset"
-                class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
+                class="relative py-2 text-lg text-black uppercase transition duration-150 ease-in-out bg-white rounded-full group w-28 shadow-button hover:bg-black hover:text-white focus:outline-none md:focus:ring ring-white ring-opacity-50"
             >
               Ja
               <svg
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
-                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
+                class="absolute w-2 h-2 text-black transition-colors duration-150 ease-in-out transform -translate-y-1/2 right-5 top-1/2 group-hover:text-white"
               >
                 <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
               </svg>
             </button>
-            <button
-              x-cloak
-              x-show="modeldataset"
-              type="submit"
-              class="group mt-5 relative uppercase w-28 py-2 text-black text-lg shadow-button bg-white rounded-full hover:bg-black hover:text-white transition ease-in-out duration-150"
-            >
-              Ja
-              <svg
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-black group-hover:text-white transition-colors ease-in-out duration-150"
-              >
-                <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
-              </svg>
-            </button>
-          </form>
-          <form x-bind:action="no_action" action="">
             <button type="submit"
-              class="group mt-5 relative uppercase w-28 py-2 text-white text-lg shadow-button bg-black rounded-full hover:bg-white hover:text-black transition ease-in-out duration-150"
+              class="relative py-2 text-lg text-white uppercase transition duration-150 ease-in-out bg-black rounded-full group w-28 shadow-button hover:bg-white hover:text-black focus:outline-none md:focus:ring ring-white ring-opacity-50"
             >
               Nein
               <svg
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
-                class="absolute right-5 top-1/2 w-2 h-2 transform -translate-y-1/2 text-white group-hover:text-black transition-colors ease-in-out duration-150"
+                class="absolute w-2 h-2 text-white transition-colors duration-150 ease-in-out transform -translate-y-1/2 right-5 top-1/2 group-hover:text-black"
               >
                 <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
               </svg>
             </button>
-          </form>
           </div>
+        </form>
         </div>
       </div>
+       <div class="space-y-0.5">
+            <!-- Alternative Topics -->
+            <section class="px-2 md:px-0 space-y-0.5">
+              <div>
+                <div class="px-6 bg-white md:px-8 bg-opacity-30">
+                  <h3 class="py-3 text-sm text-white md:text-xl">Alternative Themen wären:</h3>
+                </div>
+                <!-- Bevölkerung -->
+                <div class="flex items-center justify-between px-6 py-2 bg-white md:px-8 bg-opacity-20">
+                  <div class="flex flex-col mt-2">
+                    <span class="text-xl leading-4 text-white md:text-2xl">Bevölkerung</span>
+                    <!-- Probability with question Icon -->
+                    <div class="flex items-center space-x-4">
+                      <span class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
+                        >60% Wahrscheinlichkeit
+                      </span>
+                      <button
+                        aria-label="Erklärung zur Wahrscheinlichkeit"
+                        class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
+                      >
+                        <svg
+                          class="self-center w-6 h-6 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Arrow down icon -->
+                  <button
+                    aria-label="Mehr zu Bevölkerung anzeigen"
+                    class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <!-- Kommune -->
+              <div class="flex items-center justify-between px-6 py-2 bg-white md:px-8 bg-opacity-20">
+                <div class="flex flex-col mt-2">
+                  <span class="text-xl leading-4 text-white md:text-2xl">Kommune</span>
+                  <!-- Probability with question Icon -->
+                  <div class="flex items-center space-x-4">
+                    <span class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
+                      >20% Wahrscheinlichkeit
+                    </span>
+                    <button
+                      aria-label="Erklärung zur Wahrscheinlichkeit"
+                      class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
+                    >
+                      <svg
+                        class="self-center w-6 h-6 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Arrow down icon -->
+                <button
+                  aria-label="Mehr zu Kommune anzeigen"
+                  class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
+                >
+                  <svg
+                    class="w-6 h-6 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+            </section>
 
       <!-- Descriptions -->
-      <div class="px-2 space-y-0.5 pb-2">
+      <section class="px-2 md:px-0 space-y-0.5 pb-2">
         <!-- Titel -->
         {% include "data-entry.html" with title="Titel" text=dataset.title %}
         <!-- Beschreibung einklappen -->
@@ -106,7 +230,7 @@
             </svg>
           </button>
 
-          <span class="block uppercase text-primary-blue text-2sm font-medium leading-5">Beschreibung</span>
+          <span class="block text-sm font-medium leading-5 uppercase text-primary-blue md:text-xl">Beschreibung</span>
           <svg
             class="w-9 h-6 text-black"
             viewBox="0 0 48 24"
@@ -115,7 +239,7 @@
           >
             <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
           </svg>
-          <div class="leading-5">
+          <div class="leading-5 md:text-xl">
             {{dataset.description | safe }}
           </div>
         </div>
