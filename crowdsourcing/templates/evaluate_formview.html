@@ -15,7 +15,7 @@
   <h2 class="mt-1 text-2xl">{{dataset.modeldataset}}</h2>
   <p class="mt-2 text-gray-600 text-sm">Ist das der korrekte Musterdatensatz?</p>
   <div class="flex">
-    <form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data'>
+    <form method="POST" action="{% url 'crowdsourcing:evaluate' %}" enctype='multipart/form-data'>
       {% csrf_token %}
       <input type="hidden" name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
       <input type="hidden" name="modeldataset" id="id_modeldataset" value="{{ modeldataset.id }}"/>
@@ -29,7 +29,7 @@
   </div>
   <div class="mt-4" x-show="top3">
     <p class="text-gray-600 text-sm">Vielleicht einer dieser Musterdatensätze.</p>
-    <form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data' id="update_score">
+    <form method="POST" action="{% url 'crowdsourcing:evaluate' %}" enctype='multipart/form-data' id="update_score">
       {% csrf_token %}
       <input type="text" hidden name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
       <div >
@@ -44,7 +44,7 @@
     </form>
     <div id="" class="mt-4 " x-show="all">
       <p class="text-gray-600 text-sm">Wähle aus allen Musterdatensätzen:</p>
-      <form method="POST" action="{% url 'musterdaten:evaluate' %}" enctype='multipart/form-data' class="">
+      <form method="POST" action="{% url 'crowdsourcing:evaluate' %}" enctype='multipart/form-data' class="">
         {% csrf_token %}
         <input type="hidden" name="dataset" id="id_dataset" value="{{ dataset.id }}"/>
         <select id="id_modeldataset" name="modeldataset">
