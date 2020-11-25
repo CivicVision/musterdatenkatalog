@@ -16,12 +16,13 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "tailwindcss": "^1.6.2",
+    "tailwindcss": "^2.0.1",
     "@tailwindcss/ui": "^0.6.2",
     "autoprefixer": "^9.8.6",
     "clean-css-cli": "^4.3.0",
     "node-sass": "^4.14.1",
-    "postcss-cli": "^7.1.1",
+    "postcss": "^8.1.10",
+    "postcss-cli": "^8.3.0",
     "postcss-scss": "^2.1.1",
     "rimraf": "^3.0.2",
     "watch": "^1.0.2"
