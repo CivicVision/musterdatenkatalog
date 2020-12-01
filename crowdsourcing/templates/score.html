@@ -23,7 +23,7 @@
     </header>
   </div>
 
-  <div class="bg-primary-blue" x-data="{ modeldataset: false }">
+  <div class="bg-primary-blue" x-data="{ modeldataset: false, yes_action: '', no_action: '/score/all_subjects/' }">
     <div class="max-w-4xl mx-auto md:space-y-8 md:bg-white md:bg-opacity-20 md:py-8">
       <!-- Topic Suggestion -->
       <div class="px-8">
@@ -46,7 +46,7 @@
                   x-transition:leave="transition transform ease-out duration-1000"
                   x-transition:leave-start="opacity-100 translate-x-0"
                   x-transition:leave-end="opacity-0 -translate-x-full"
-                  >{{modeldataset.modelsubject}}</span>
+                  >{{modeldataset.modeldataset__modelsubject__title}}</span>
                 <span
                   x-cloak
                   class="hide absolute"
@@ -54,53 +54,56 @@
                   x-transition:enter="transition transform ease-out duration-1000"
                   x-transition:enter-start="opacity-0 translate-x-full"
                   x-transition:enter-end="opacity-100 translate-x-0"
-                  >{{modeldataset.title}}</span>
+                  >{{dataset.modeldataset.title}}</span>
               </div>
               <!-- Probability with question Icon -->
-              <div class="flex items-center space-x-4" x-show="!modeldataset">
+              <div class="flex items-center space-x-4" :class="{ 'invisible': modeldataset }" >
                 <span class="inline-flex items-baseline justify-center text-xs leading-7 font-normal text-white md:text-xl mt-2"
-                      >60% Wahrscheinlichkeit
+                      >
+                      {% if top_3.count > 0 %}{% widthratio modeldataset.pred 1 100 %}{% else %}100{% endif %}% Wahrscheinlichkeit
                 </span>
                   {% include "question-mark.html" %}
               </div>
             </div>
-            <div class="realtive">
-              <span class="block mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
-              <span x-cloak class="block hide mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="modeldataset">Ist das der korrekte <strong class="text-white font-normal">Bereich</strong>?</span>
+            <div>
+              <div class="realtive">
+                <span class="block mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
+                <span x-cloak class="block hide mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="modeldataset">Ist das der korrekte <strong class="text-white font-normal">Bereich</strong>?</span>
+              </div>
+              {% include "yes-no-form.html" with modeldataset=modeldataset %}
             </div>
-            {% include "yes-no-form.html" %}
           </div>
       </div>
 
       <div class="space-y-0.5 bg-primary-blue">
         <!-- Alternative Topics -->
+        {% if top_3.count > 0 %}
         <section
           class="px-2 md:px-0 space-y-0.5"
-          x-show.immediate="!modeldataset"
           >
-          <div>
               <div class="px-6 bg-white bg-opacity-30 md:px-8 md:bg-opacity-40">
                 <h3 class="py-3 text-sm text-white md:text-xl">Alternative Themen wären:</h3>
               </div>
+              {% for subject in top_3 %}
               <!-- Bevölkerung -->
-              <div x-data="{ show: true }">
+              <div x-data="{ show: true, modeldataset: false, yes_action: '', no_action: '/score/top3_subject/{{dataset.pk}}' }">
               <div
                 class="flex items-center justify-between px-6 py-2 bg-white bg-opacity-20 md:px-8"
                 >
                 <div class="flex flex-col mt-2">
-                  <span class="text-xl leading-4 text-white md:text-2xl">Bevölkerung</span>
+                  <span class="text-xl leading-4 text-white md:text-2xl">{{subject.modeldataset__modelsubject__title}}</span>
                   <!-- Probability with question Icon -->
                   <div class="flex items-center space-x-4">
                     <span
                       class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
-                      >60% Wahrscheinlichkeit
+                      >{% widthratio subject.pred 1 100 %}% Wahrscheinlichkeit
                     </span>
                       {% include "question-mark.html" %}
                   </div>
                 </div>
                 <!-- Arrow down icon -->
                 <button
-                  @click="show = !show"
+                  @click.prevent="show = !show"
                   aria-label="Mehr zu Bevölkerung anzeigen"
                   class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
                   >
@@ -114,35 +117,12 @@
                   {% include "yes-no-form.html" %}
                 </div>
               </div>
-            </div>
-
-          </div>
           <!-- Kommune -->
-          <div 
-                     class="flex items-center justify-between px-6 py-2 bg-white md:px-8 bg-opacity-20"
-                     x-data="{ show: true }"
-                     >
-                     <div class="flex flex-col mt-2">
-                       <span class="text-xl leading-4 text-white md:text-2xl">Kommune</span>
-                       <!-- Probability with question Icon -->
-                       <div class="flex items-center space-x-4">
-                         <span class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
-                               >20% Wahrscheinlichkeit
-                         </span>
-                           {% include "question-mark.html" %}
-                       </div>
-                     </div>
 
-                     <!-- Arrow down icon -->
-                     <button
-                       @click="show = !show"
-                       aria-label="Mehr zu Kommune anzeigen"
-                       class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
-                       >
-                       {% include "chevron-up.html" with classes="w-6 h-6 text-white" %}
-                     </button>
+          {% endfor %}
           </div>
         </section>
+        {% endif %}
 
         <!-- Descriptions -->
         <section class="px-2 md:px-0 space-y-0.5 pb-2">
