@@ -8,7 +8,7 @@ from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 
 from crowdsourcing.forms import ScoreForm, EvaluateWizardFirstStepForm ,Top3Form, ModelsubjectsForm, ModeldatasetsForm
-from musterdaten.models import Dataset, Modeldataset, Modelsubject, Score
+from musterdaten.models import Dataset, Modeldataset, Modelsubject, Score, Top3
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -116,12 +116,16 @@ class EvaluateFormView(SessionWizardView):
 
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)
-        print(context)
         if self.steps.current == 'dataset':
             dataset = self.get_dataset_by_id(context.get('dataset_id'))
+            modelsubjects = dataset.top_3.select_related('modelsubject')
+            top3 = dataset.top3_modelsubjects.all()
+            top3_raw = Top3.objects.filter(dataset_id=dataset.pk).all()
             context.update({
                 'dataset': dataset,
-                'modeldataset': dataset.modeldataset
+                'modeldataset': dataset.modeldataset,
+                'top3': top3,
+                'top3_raw': top3_raw
                 })
         if self.steps.current == 'top3':
             dataset = self.get_dataset_by_id(context.get('dataset_id'))
@@ -136,7 +140,6 @@ class EvaluateFormView(SessionWizardView):
         return context
 
     def get_form(self, step=None, data=None, files=None):
-        print(step)
         dataset = self.get_dataset()
         kwargs = self.get_form_kwargs(step)
 

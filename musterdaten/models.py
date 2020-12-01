@@ -1,5 +1,5 @@
+from django.db.models import Sum
 from django.db import models
-
 
 class Modelsubject(models.Model):
     title = models.CharField(max_length=64, verbose_name="titel")
@@ -116,6 +116,10 @@ class Dataset(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def top3_modelsubjects(self):
+        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values('modeldataset__modelsubject__id', 'modeldataset__modelsubject__title').annotate(pred = Sum('pred')).order_by('-pred')
+        return top3.all()
 
 class Score(models.Model):
 
