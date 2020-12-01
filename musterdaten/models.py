@@ -1,4 +1,4 @@
-from django.db.models import Sum
+from django.db.models import Sum, Avg
 from django.db import models
 
 class Modelsubject(models.Model):
@@ -118,7 +118,7 @@ class Dataset(models.Model):
 
     @property
     def top3_modelsubjects(self):
-        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values('modeldataset__modelsubject__id', 'modeldataset__modelsubject__title').annotate(pred = Sum('pred')).order_by('-pred')
+        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values('modeldataset__modelsubject__id', 'modeldataset__modelsubject__title').annotate(pred = Avg('pred')).order_by('-pred')
         return top3.all()
 
 class Score(models.Model):

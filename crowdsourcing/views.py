@@ -124,7 +124,9 @@ class EvaluateFormView(SessionWizardView):
             context.update({
                 'dataset': dataset,
                 'modeldataset': dataset.modeldataset,
+                'modeldataset_score': top3[0],
                 'top3': top3,
+                'top3_alternatives': top3[1:],
                 'top3_raw': top3_raw
                 })
         if self.steps.current == 'top3':
