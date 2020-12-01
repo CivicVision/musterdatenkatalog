@@ -1,0 +1,47 @@
+<div class="flex items-center justify-between mt-2 md:mt-4 md:justify-start md:space-x-14">
+  <form x-bind:action="yes_action" action="">
+    <div>
+      <button
+        x-on:click.prevent="modeldataset = true; yes_action='/score', no_action='/score/thema/{{modeldataset.modelsubject.id}}'"
+        x-show="!modeldataset"
+        class="relative py-2 text-lg text-black uppercase transition duration-150 ease-in-out bg-white rounded-full group w-28 shadow-button hover:bg-black hover:text-white focus:outline-none md:focus:ring ring-white ring-opacity-50"
+        >
+        Ja
+        <svg
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          class="absolute w-2 h-2 text-black transition-colors duration-150 ease-in-out transform -translate-y-1/2 right-5 top-1/2 group-hover:text-white"
+          >
+          <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+        </svg>
+      </button>
+        <button
+          x-show="modeldataset"
+          type="submit"
+          class="relative py-2 text-lg text-black uppercase transition duration-150 ease-in-out bg-white rounded-full group w-28 shadow-button hover:bg-black hover:text-white focus:outline-none md:focus:ring ring-white ring-opacity-50"
+          >
+          Ja
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            class="absolute w-2 h-2 text-black transition-colors duration-150 ease-in-out transform -translate-y-1/2 right-5 top-1/2 group-hover:text-white"
+            >
+            <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+          </svg>
+        </button>
+  </div>
+    </form>
+    <form x-bind:action="no_action" action="">
+    <button type="submit"
+            class="relative py-2 text-lg text-white uppercase transition duration-150 ease-in-out bg-black rounded-full group w-28 shadow-button hover:bg-white hover:text-black focus:outline-none md:focus:ring ring-white ring-opacity-50"
+            >
+            Nein
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              class="absolute w-2 h-2 text-white transition-colors duration-150 ease-in-out transform -translate-y-1/2 right-5 top-1/2 group-hover:text-black"
+              >
+              <polygon points="0,0 0,24 18,12" stroke="none" fill="currentColor" />
+            </svg>
+    </button>
+  </div>

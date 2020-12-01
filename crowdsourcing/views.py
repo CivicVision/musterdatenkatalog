@@ -6,7 +6,7 @@ from django.views.generic import FormView, CreateView, TemplateView, DetailView,
 from django.views.generic.detail import SingleObjectMixin
 
 from crowdsourcing.forms import ScoreForm
-from musterdaten.models import Dataset, Modeldataset, Modelsubject
+from musterdaten.models import Dataset, Modeldataset, Modelsubject, Score, Top3
 
 class IndexView(TemplateView):
     template_name = "index.html"
@@ -57,9 +57,11 @@ class EvaluateFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dataset = Dataset.objects.order_by('?').first()
+        top3 = dataset.top3_modelsubjects.all()
+        top3_raw = Top3.objects.filter(dataset_id=dataset.pk).all()
         context["dataset"] = dataset
-        context["modeldataset"] = dataset.modeldataset
-        context["top_3"] = dataset.top_3
+        context["modeldataset"] = top3[0]
+        context["top_3"] = top3[1:]
         context["all_modeldatasets"] = Modeldataset.objects.all()
         return context
 

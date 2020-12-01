@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 {% load misc %}
-{% block container_class%} min-h-screen relative flex flex-col {% endblock %}
-{% block body_class %} min-h-screen font-sans bg-primary-blue {% endblock %}
+{% block container_class%} {% endblock %}
+{% block body_class %} relative flex flex-col min-h-screen font-sans bg-primary-blue {% endblock %}
 {% block content %}
-<main class="flex-grow relative px-2 space-y-2 max-w-2xl md:mx-auto flex flex-col">
-  <header class="space-y-6">
+<main class="relative flex flex-col flex-grow max-w-4xl px-2 mx-auto space-y-2 md:space-y-6">
+  <header class="space-y-6 md:space-y-4">
     <!-- Search input and heading -->
-    <div class="mt-8 mx-auto flex flex-col items-center space-y-6">
+    <div class="flex flex-col items-center mx-auto mt-8 space-y-6 md:space-y-10">
       <!-- Input -->
-      <div class="relative w-72">
+      <div class="relative w-72 md:w-full">
         <input
-          class="w-full px-6 py-2 text-2sm placeholder-black bg-white rounded-full leading-7"
+          class="w-full px-6 py-2 text-sm leading-7 placeholder-black bg-white rounded-full md:py-3 md:text-lg"
           placeholder="Suche nach Themen"
           />
-        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
           <svg
             class="w-6 h-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@
 
       <!-- Heading -->
       <div>
-        <span class="uppercase text-2sm font-medium text-white leading-6"> Wähle aus allen Musterdatensätzen </span>
+        <span class="text-sm font-medium leading-6 text-white uppercase md:text-7xl md:normal-case"> Wähle aus allen Musterdatensätzen </span>
         <svg
           class="w-9 h-6 text-white"
           viewBox="0 0 48 24"
@@ -48,44 +48,44 @@
     <!-- Letter Selection -->
     <div class="flex justify-between items-start space-x-6">
       <!-- A-F -->
-      <a href="#A" class="w-1/4 text-center bg-white px-1 py-4">
-        <span class="text-2sm font-medium leading-6 tracking-widest">A-F</span>
+      <a href="#A" class="w-1/4 px-1 py-4 text-center bg-white md:w-32">
+        <span class="text-sm font-medium leading-6 tracking-widest md:text-4xl">A-F</span>
       </a>
 
       <!-- G-L -->
-      <a href="#G" class="w-1/4 text-center bg-white px-1 py-4">
-        <span class="text-2sm font-medium leading-6 tracking-widest">G-L</span>
+      <a href="#G" class="w-1/4 px-1 py-4 text-center bg-white md:w-32">
+        <span class="text-sm font-medium leading-6 tracking-widest md:text-4xl">G-L</span>
       </a>
 
       <!-- M-R -->
-      <a href="#M" class="w-1/4 text-center bg-white px-1 py-4">
-        <span class="text-2sm font-medium leading-6 tracking-widest">M-R</span>
+      <a href="#M" class="w-1/4 px-1 py-4 text-center bg-white md:w-32">
+        <span class="text-sm font-medium leading-6 tracking-widest md:text-4xl">M-R</span>
       </a>
 
       <!-- S-Z -->
-      <a href="#S" class="w-1/4 text-center bg-white px-1 py-4">
-        <span class="text-2sm font-medium leading-6 tracking-widest">S-Z</span>
+      <a href="#S" class="w-1/4 px-1 py-4 text-center bg-white md:w-32">
+        <span class="text-sm font-medium leading-6 tracking-widest md:text-4xl">S-Z</span>
       </a>
     </div>
   </header>
 
   <!-- Topics -->
-  <div class="pt-2 h-0 flex-grow overflow-y-auto space-y-0.5">
+  <div class="pt-2 h-0 flex-grow overflow-y-auto space-y-0.5 md:space-y-2">
     {% regroup object_list by first_letter as letter_list %}
     {% for letter in letter_list %}
     <!-- A -->
     <a name="{{ letter.grouper }}"></a>
     <div class="bg-white bg-opacity-20">
       <!-- Head -->
-      <div class="px-3 py-2 bg-white bg-opacity-25">
-        <span class="text-xl font-medium text-white leading-7">{{ letter.grouper }}</span>
+      <div class="px-3 py-2 bg-white bg-opacity-25 md:px-6 md:py-3">
+        <span class="text-xl font-medium leading-7 text-white md:text-4xl">{{ letter.grouper }}</span>
       </div>
       <!-- Topics -->
-      <div class="px-3 py-2.5">
-        <ul>
+      <div class="px-3 py-2.5 md:px-6 md:py-4">
+        <ul class="md:space-y-4">
           {% for item in letter.list %}
           <li>
-            <a class="block text-white text-2sm leading-4 py-4" href="/score/thema/{{item.pk}}">{{item.title}}</a>
+            <a class="inline-block text-sm leading-4 text-white md:text-xl" href="/score/thema/{{item.pk}}">{{item.title}}</a>
           </li>
            {% endfor %}
         </ul>
