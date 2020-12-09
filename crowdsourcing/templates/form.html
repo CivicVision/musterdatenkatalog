@@ -5,7 +5,7 @@
 <main class="">
   {% include "score/header.html" with categories=dataset.categories.all|join_by_attr:'title' title=dataset.title %}
 
-  <div class="bg-primary-blue" x-data="{ modeldataset: false }">
+  <div class="bg-primary-blue" x-data="score()">
         <div class="px-2 md:px-0 space-y-0.5 max-w-4xl mx-auto">
           <div class="md:flex md:flex-wrap bg-white bg-opacity-30">
             <div
@@ -15,6 +15,19 @@
                 Das Machine Learning Modell schlägt vor:
               </h2>
 							{% include "score/sidebar.html" %}
+              <form x-ref="foo" action="" method="post">{% csrf_token %}
+                <div class="hidden">
+                {{ wizard.management_form  }}
+                {% if wizard.form.forms %}
+                {{ wizard.form.management_form  }}
+                {% for form in wizard.form.forms %}
+                {{ form  }}
+                {% endfor %}
+                {% else %}
+                {{ wizard.form  }}
+                {% endif %}
+                </div>
+              </form>
 
           <ul class="md:hidden">
                 <li
@@ -77,10 +90,18 @@
               <ul class="w-full">
                 {% block data_desktop %}{% endblock %}
               </ul>
+              {% block action_desktop %}{% endblock %}
               <button
                 class="px-4 py-2 text-black bg-primary-blue mt-4 hover:bg-white"
+                x-on:click.prevent="{% block primary_action_desktop %}{% endblock %}"
               >
-                Keines der genannten Themen
+              {% block primary_action_text_desktop %}{% endblock %}
+              </button>
+              <button
+                x-on:click.prevent="{% block secondary_action_desktop %}{% endblock %}"
+                class="px-4 py-2 text-primary-blue border-primary-blue mt-4 hover:bg-white"
+              >
+                {% block secondary_action_text_desktop %}{% endblock %}
               </button>
             </div>
           </div>
