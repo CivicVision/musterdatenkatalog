@@ -21,6 +21,10 @@ module.exports = {
         "primary-blue": "#2FACDB",
       },
     },
+    gradientColorStops: theme => ({
+      ...theme('colors'),
+      'primary': '#2FACDB',
+    })
   },
   // to enable group-hover
   variants: {
