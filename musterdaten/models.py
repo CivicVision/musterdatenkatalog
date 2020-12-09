@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 
 
 class Modelsubject(models.Model):
@@ -116,6 +117,21 @@ class Dataset(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def top3_modelsubjects(self):
+        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values(
+            'modeldataset__modelsubject__id',
+            'modeldataset__modelsubject__title',
+        ).annotate(pred=Avg('pred')).order_by('-pred')
+        return top3
+
+    @property
+    def top3_modeldatasets(self):
+        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values(
+            'modeldataset_id',
+            'modeldataset__title',
+        ).order_by('-pred')
+        return top3
 
 class Score(models.Model):
 

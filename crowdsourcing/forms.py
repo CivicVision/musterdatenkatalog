@@ -1,6 +1,5 @@
-from django.forms import ModelForm, ValidationError
-
-from musterdaten.models import Score
+from django.forms import ModelForm, ValidationError, Form, ModelChoiceField, RadioSelect
+from musterdaten.models import Score, Modelsubject, Modeldataset
 
 
 class ScoreForm(ModelForm):
@@ -16,3 +15,19 @@ class ScoreForm(ModelForm):
             raise ValidationError("Invalid modeldataset.")
         if not dataset:
             raise ValidationError("Invalid dataset.")
+
+
+class EvaluateWizardFirstStepForm(Form):
+    modelsubject = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modelsubject'}), queryset=Modelsubject.objects.all())
+
+
+class EvaluateWizardSecondStepForm(Form):
+    modeldataset = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modeldataset'}), queryset=Modeldataset.objects.all(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        kwargs.pop('top3', None)
+        super().__init__(*args, **kwargs)
+
+
+class EvaluateWizardThirdStepForm(Form):
+    modeldataset = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modeldataset'}), queryset=Modeldataset.objects.all())
