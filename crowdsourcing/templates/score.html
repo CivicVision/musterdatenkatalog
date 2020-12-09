@@ -3,148 +3,203 @@
 {% load misc %}
 {% block content %}
 <main class="space-y-8 md:space-y-0">
-  <!-- Page Heading -->
-  <div class="bg-white">
-    <header class="max-w-4xl px-8 py-8 mx-auto md:py-10">
-      <span class="text-sm font-medium leading-6 uppercase md:text-xl text-primary-blue"
-            >{{ dataset.categories.all|join_by_attr:'title'}}
-      </span>
-        <svg
-          class="w-9 h-6 text-black"
-          viewBox="0 0 48 24"
-          shape-rendering="crispEdges"
-          xmlns="http://www.w3.org/2000/svg"
-          >
-          <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
-        </svg>
-          <h1 class="text-xl leading-6 md:text-7xl md:font-medium break-words">
-            {{dataset.title}}
-          </h1>
-    </header>
-  </div>
+  {% include "score/header.html" with categories=dataset.categories.all|join_by_attr:'title' title=dataset.title %}
 
   <div class="bg-primary-blue" x-data="{ modeldataset: false }">
-    <div class="max-w-4xl mx-auto md:space-y-8 md:bg-white md:bg-opacity-20 md:py-8">
-      <!-- Topic Suggestion -->
-      <div class="px-8">
-        <span class="text-sm leading-5 text-white md:text-xl">Das Machine Learning Modell schlägt vor:</span>
-        <svg
-          class="h-6 text-white md:h-8 w-9"
-          viewBox="0 0 48 24"
-          shape-rendering="crispEdges"
-          xmlns="http://www.w3.org/2000/svg"
-          >
-          <line x1="0" y1="12" x2="48" y2="12" stroke-width="3" stroke="currentColor" />
-        </svg>
+        <div class="max-w-4xl mx-auto">
+          <div class="md:flex md:flex-wrap bg-white bg-opacity-30">
+            <div
+              class="w-full md:w-1/4 p-0 md:p-4 border-0 md:border-r-2 md:border-primary-blue"
+            >
+              <h2 class="md:hidden text-sm leading-5 text-white p-4">
+                Das Machine Learning Modell schlägt vor:
+              </h2>
+              <!--SIDEBAR-->
+              <nav aria-label="Progress" class="hidden md:block">
+                <ol class="overflow-hidden">
+                  <li class="relative pb-10">
+                    <!-- Current Step -->
+                    <div
+                      class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-primary-blue"
+                      aria-hidden="true"
+                    ></div>
+                    <a
+                      href="#"
+                      class="relative flex items-center group"
+                      aria-current="step"
+                    >
+                      <span class="h-9 flex items-center" aria-hidden="true">
+                        <span
+                          class="relative z-10 w-8 h-8 flex items-center justify-center bg-white flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 border-primary-blue rounded-full group-hover:bg-primary-blue"
+                        >
+                          <span class="text-gray-500 group-hover:text-white"
+                            >1</span
+                          >
+                        </span>
+                      </span>
+                      <span class="ml-4 min-w-0 flex flex-col">
+                        <span
+                          class="text-xs font-semibold uppercase tracking-wide text-black"
+                          >Thema</span
+                        >
+                      </span>
+                    </a>
+                  </li>
 
-          <div class="pb-4">
-            <div class="block text-xl leading-5 text-white md:text-7xl md:font-medium">
-              <div class="h-16">
-                <span
-                  class="absolute"
-                  x-show="!modeldataset"
-                  x-transition:leave="transition transform ease-out duration-1000"
-                  x-transition:leave-start="opacity-100 translate-x-0"
-                  x-transition:leave-end="opacity-0 -translate-x-full"
-                  >{{modeldataset.modelsubject}}</span>
-                <span
-                  x-cloak
-                  class="hide absolute"
-                  x-show="modeldataset"
-                  x-transition:enter="transition transform ease-out duration-1000"
-                  x-transition:enter-start="opacity-0 translate-x-full"
-                  x-transition:enter-end="opacity-100 translate-x-0"
-                  >{{modeldataset.title}}</span>
-              </div>
-              <!-- Probability with question Icon -->
-              <div class="flex items-center space-x-4" x-show="!modeldataset">
-                <span class="inline-flex items-baseline justify-center text-xs leading-7 font-normal text-white md:text-xl mt-2"
-                      >60% Wahrscheinlichkeit
-                </span>
-                  {% include "question-mark.html" %}
-              </div>
-            </div>
-            <div class="realtive">
-              <span class="block mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="!modeldataset">Ist das das korrekte <strong class="text-white font-normal">Thema</strong> ?</span>
-              <span x-cloak class="block hide mt-4 text-sm leading-6 text-white md:text-xl md:mt-8" x-show="modeldataset">Ist das der korrekte <strong class="text-white font-normal">Bereich</strong>?</span>
-            </div>
-            {% include "yes-no-form.html" %}
-          </div>
-      </div>
-
-      <div class="space-y-0.5 bg-primary-blue">
-        <!-- Alternative Topics -->
-        <section
-          class="px-2 md:px-0 space-y-0.5"
-          x-show.immediate="!modeldataset"
-          >
-          <div>
-              <div class="px-6 bg-white bg-opacity-30 md:px-8 md:bg-opacity-40">
-                <h3 class="py-3 text-sm text-white md:text-xl">Alternative Themen wären:</h3>
-              </div>
-              <!-- Bevölkerung -->
-              <div x-data="{ show: true }">
-              <div
-                class="flex items-center justify-between px-6 py-2 bg-white bg-opacity-20 md:px-8"
+                  <li class="relative">
+                    <a
+                      href="#"
+                      class="relative flex items-center group"
+                      aria-current="step"
+                    >
+                      <span class="h-9 flex items-center" aria-hidden="true">
+                        <span
+                          class="relative z-10 w-8 h-8 flex items-center justify-center bg-white flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 border-primary-blue rounded-full group-hover:bg-primary-blue"
+                        >
+                          <span class="text-gray-500 group-hover:text-white"
+                            >2</span
+                          >
+                        </span>
+                      </span>
+                      <span class="ml-4 min-w-0 flex flex-col">
+                        <span
+                          class="text-xs font-semibold uppercase tracking-wide text-black"
+                          >Bezeichnung</span
+                        >
+                      </span>
+                    </a>
+                  </li>
+                </ol>
+              </nav>
+              <ul class="md:hidden">
+                <li
+                  class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
                 >
-                <div class="flex flex-col mt-2">
-                  <span class="text-xl leading-4 text-white md:text-2xl">Bevölkerung</span>
-                  <!-- Probability with question Icon -->
-                  <div class="flex items-center space-x-4">
+                  <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
                     <span
-                      class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
-                      >60% Wahrscheinlichkeit
-                    </span>
-                      {% include "question-mark.html" %}
-                  </div>
-                </div>
-                <!-- Arrow down icon -->
-                <button
-                  @click="show = !show"
-                  aria-label="Mehr zu Bevölkerung anzeigen"
-                  class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
-                  >
-                  {% include "chevron-up.html" with classes="w-6 h-6 text-white" %}
-                </button>
-              </div>
-              <div class="px-6 pt-2 pb-8 bg-white bg-opacity-20 md:px-8" x-show="show">
-                <span class="block text-sm leading-6 text-white md:text-xl">Ist das das korrekte Thema?</span>
-
-                <div class="flex items-center justify-between mt-2 md:mt-4 md:justify-start md:space-x-14">
-                  {% include "yes-no-form.html" %}
-                </div>
-              </div>
+                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
+                      >1</span
+                    >
+                    Thema
+                    <svg
+                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+                  <ul id="sub" class="text-white md:hidden">
+                    <li class="bg-primary-blue p-4 border-b text-xl relative">
+                      Bevolkerung
+                      <span class="block text-sm">60% Wahrscheinlichkeit</span>
+                      <svg
+                        class="w-6 h-6 absolute vertical-center right-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </li>
+                    <li class="bg-primary-blue p-4 border-b text-xl relative">
+                      Bevolkerung
+                      <span class="block text-sm">60% Wahrscheinlichkeit</span>
+                      <svg
+                        class="w-6 h-6 absolute vertical-center right-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </li>
+                  </ul>
+                </li>
+                <li
+                  class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
+                >
+                  <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
+                    <span
+                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
+                      >2</span
+                    >
+                    Bezeichnung
+                    <svg
+                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
             </div>
-
+            <div class="hidden md:block md:w-3/4 px-4 py-10">
+              <!--SUBTILE-->
+              <h2 class="text-sm leading-5 text-white">
+                Das Machine Learning Modell schlägt vor:
+              </h2>
+              <!--EO SUBTILE-->
+              <h1 class="text-2xl text-black mt-2">Thema</h1>
+              <ul class="w-full">
+                <li
+                  class="flex flex-col py-2 px-4 border-b-2 border-primary-blue bg-opacity-30"
+                >
+                  <label class="inline-flex items-center mt-3">
+                    <input
+                      type="radio"
+                      name="radio"
+                      class="form-radio h-5 w-5 text-gray-600"
+                      checked
+                    />
+                    <span class="ml-2 text-gray-700 inline-block"
+                      >Bevölkerung</span
+                    >
+                  </label>
+                  <p class="ml-7">60% Wahrscheinlichkeit</p>
+                </li>
+                <li
+                  class="flex flex-col py-2 px-4 border-primary-blue bg-opacity-30 border-b-2 border-primary-blue"
+                >
+                  <label class="inline-flex items-center mt-3">
+                    <input
+                      type="radio"
+                      name="radio"
+                      class="form-radio h-5 w-5 text-gray-600"
+                    />
+                    <span class="ml-2 text-gray-700 inline-block">Kommune</span>
+                  </label>
+                  <p class="ml-7">20% Wahrscheinlichkeit</p>
+                </li>
+              </ul>
+              <button
+                class="px-4 py-2 text-black bg-primary-blue mt-4 hover:bg-white"
+              >
+                Keines der genannten Themen
+              </button>
+            </div>
           </div>
-          <!-- Kommune -->
-          <div 
-                     class="flex items-center justify-between px-6 py-2 bg-white md:px-8 bg-opacity-20"
-                     x-data="{ show: true }"
-                     >
-                     <div class="flex flex-col mt-2">
-                       <span class="text-xl leading-4 text-white md:text-2xl">Kommune</span>
-                       <!-- Probability with question Icon -->
-                       <div class="flex items-center space-x-4">
-                         <span class="inline-flex items-baseline justify-center text-xs leading-7 text-white md:text-base"
-                               >20% Wahrscheinlichkeit
-                         </span>
-                           {% include "question-mark.html" %}
-                       </div>
-                     </div>
-
-                     <!-- Arrow down icon -->
-                     <button
-                       @click="show = !show"
-                       aria-label="Mehr zu Kommune anzeigen"
-                       class="inline-flex justify-center py-1 rounded-full ring-white ring-opacity-50 items-cemter w-7 h-7 focus:outline-none md:focus:ring"
-                       >
-                       {% include "chevron-up.html" with classes="w-6 h-6 text-white" %}
-                     </button>
-          </div>
-        </section>
-
-        <!-- Descriptions -->
+				<!-- Descriptions -->
         <section class="px-2 md:px-0 space-y-0.5 pb-2">
           <!-- Titel -->
           {% include "data-entry.html" with title="Titel" text=dataset.title %}
@@ -181,6 +236,8 @@
           {% endwith %}
 
           {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
+					</section>
+        </div>
       </div>
 </main>
 {% endblock %}
