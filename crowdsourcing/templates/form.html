@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block body_class %} relative font-sans bg-primary-blue {% endblock %}
+{% load misc %}
+{% block content %}
+<main class="">
+  {% include "score/header.html" with categories=dataset.categories.all|join_by_attr:'title' title=dataset.title %}
+
+  <div class="bg-primary-blue" x-data="{ modeldataset: false }">
+        <div class="px-2 md:px-0 space-y-0.5 max-w-4xl mx-auto">
+          <div class="md:flex md:flex-wrap bg-white bg-opacity-30">
+            <div
+              class="w-full md:w-1/4 p-0 md:p-4 border-0 md:border-r-2 md:border-primary-blue"
+            >
+              <h2 class="md:hidden text-sm leading-5 text-white p-4">
+                Das Machine Learning Modell schlägt vor:
+              </h2>
+							{% include "score/sidebar.html" %}
+
+          <ul class="md:hidden">
+                <li
+                  class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
+                >
+                  <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
+                    <span
+                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
+                      >1</span
+                    >
+                    Thema
+                    <svg
+                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+            <ul id="sub" class="text-white md:hidden">
+            {% block data_mobile %}{% endblock %}
+                  </ul>
+                </li>
+                <li
+                  class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
+                >
+                  <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
+                    <span
+                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
+                      >2</span
+                    >
+                    Bezeichnung
+                    <svg
+                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="hidden md:block md:w-3/4 px-4 py-10">
+              <!--SUBTILE-->
+              <h2 class="text-sm leading-5 text-white">
+                Das Machine Learning Modell schlägt vor:
+              </h2>
+              <!--EO SUBTILE-->
+              <ul class="w-full">
+                {% block data_desktop %}{% endblock %}
+              </ul>
+              <button
+                class="px-4 py-2 text-black bg-primary-blue mt-4 hover:bg-white"
+              >
+                Keines der genannten Themen
+              </button>
+            </div>
+          </div>
+				<!-- Descriptions -->
+        <section class="space-y-0.5 pb-2">
+          <!-- Titel -->
+          {% include "data-entry.html" with title="Titel" text=dataset.title %}
+          <!-- Beschreibung einklappen -->
+          {% with max_words=25 description_count=dataset.description|wordcount %}
+          <div class="relative px-6 py-5 bg-white" x-data="{show: {% if description_count > max_words %}false{% else %}true{% endif %} }">
+            <!-- Close button -->
+            <button @click="show = !show" class="absolute inline-flex items-center justify-center top-0 right-0 w-8 h-8 bg-primary-blue">
+              <!-- Customized Heroicon Plus -->
+              <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path x-show="show" stroke-width="3" d="M20 12H4" />
+                <path x-show="!show" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+
+            <span class="block text-sm font-medium leading-5 uppercase text-primary-blue md:text-xl">Beschreibung</span>
+            <svg
+              class="w-9 h-6 text-black"
+              viewBox="0 0 48 24"
+              shape-rendering="crispEdges"
+              xmlns="http://www.w3.org/2000/svg"
+              >
+              <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+            </svg>
+              <div x-show="!show" class="leading-5 md:text-xl">
+                {{dataset.description | truncatewords_html:max_words | safe }}
+              </div>
+              {% if description_count > max_words %}
+              <div x-show="show" class="leading-5 md:text-xl">
+                {{dataset.description | safe }}
+              </div>
+              {% endif %}
+          </div>
+          {% endwith %}
+
+          {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
+					</section>
+        </div>
+      </div>
+</main>
+{% endblock %}
