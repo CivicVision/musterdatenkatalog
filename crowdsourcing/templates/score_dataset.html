@@ -44,13 +44,13 @@
       name="radio"
       class="form-radio h-5 w-5 text-gray-600"
       value="{{ subject.id}}"
-      x-on:click="setModeldataset({{ subject.modeldataset.pk }});"
+      x-on:click="setModeldataset({{ subject.pk }});"
     />
     <span class="ml-2 text-gray-700 inline-block"
-      >{{ subject.modeldataset.name }}</span
+      >{{ subject.title }}</span
     >
   </label>
-  <p class="ml-7">{{ subject.pred  }} Wahrscheinlichkeit</p>
+  <p class="ml-7">{{ subject.prediction_percentage  }} % Wahrscheinlichkeit</p>
 </li>
 {% endfor %}
 {% endblock %}

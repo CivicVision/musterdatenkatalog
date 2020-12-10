@@ -18,9 +18,9 @@ class TestEvaluate(TestCase):
         modeldataset = ModeldatasetFactory()
         modelsubject = ModelsubjectFactory()
         top3 = Top3Factory(dataset=dataset, modeldataset=modeldataset, pred=0.6)
-        all_modelsubjects = dataset.top3_modelsubjects.all()
-        top3_modeldatasets = dataset.top3_modeldatasets.all()
-        all_modeldatasets = dataset.top3_modeldatasets.all()
+        all_modelsubjects = dataset.top3_modelsubjects
+        top3_modeldatasets = dataset.top3_modeldatasets
+        all_modeldatasets = dataset.top3_modeldatasets
 
         evaluate_wizard_first_step_form = EvaluateWizardFirstStepForm(
             initial={

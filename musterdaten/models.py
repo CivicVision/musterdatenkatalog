@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 
 
 class Modelsubject(models.Model):
@@ -119,19 +119,28 @@ class Dataset(models.Model):
 
     @property
     def top3_modelsubjects(self):
-        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values(
-            'modeldataset__modelsubject__id',
-            'modeldataset__modelsubject__title',
-        ).annotate(pred=Avg('pred')).order_by('-pred')
-        return top3
+        return [Top3Modelsubject(t) for t in self.get_top3_modelsubjects().all()]
 
     @property
     def top3_modeldatasets(self):
-        top3 = Top3.objects.filter(dataset_id=self.pk).select_related().values(
+        return top3
+
+    def top3_modeldatasets_by_modelsubject(self, modelsubject_id):
+        objects = self.get_top3_modeldatasets().filter(modeldataset__modelsubject__id=modelsubject_id).all()
+        return [Top3Modeldataset(o) for o in objects]
+
+    def get_top3_modeldatasets(self):
+        return Top3.objects.filter(dataset_id=self.pk).select_related().values(
             'modeldataset_id',
             'modeldataset__title',
-        ).order_by('-pred')
-        return top3
+        ).annotate(pred=Avg('pred')).order_by('-pred')
+
+    def get_top3_modelsubjects(self):
+        return Top3.objects.filter(dataset_id=self.pk).select_related().values(
+            'modeldataset__modelsubject__id',
+            'modeldataset__modelsubject__title',
+        ).annotate(pred=Sum('pred')).order_by('-pred')
+
 
 class Score(models.Model):
 
@@ -154,3 +163,22 @@ class Top3(models.Model):
         to=Dataset, on_delete=models.PROTECT, related_name="top3_modeldatasets")
     modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
     pred = models.FloatField()
+
+class Prediction():
+    @property
+    def prediction_percentage(self):
+        return 100 if self.pred > 1 else round(self.pred * 100)
+
+
+class Top3Modelsubject(Prediction):
+    def __init__(self,entry):
+        self.pk = entry.get('modeldataset__modelsubject__id')
+        self.title = entry.get('modeldataset__modelsubject__title')
+        self.pred = entry.get('pred')
+
+
+class Top3Modeldataset(Prediction):
+    def __init__(self,entry):
+        self.pk = entry.get('modeldataset_id')
+        self.title = entry.get('modeldataset__title')
+        self.pred = entry.get('pred')

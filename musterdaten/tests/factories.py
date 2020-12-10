@@ -73,3 +73,7 @@ class ScoreFactory(factory.django.DjangoModelFactory):
 class Top3Factory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Top3
+
+    pred = 0.5
+    dataset = factory.SubFactory(DatasetFactory)
+    modeldataset = factory.SubFactory(ModeldatasetFactory)
