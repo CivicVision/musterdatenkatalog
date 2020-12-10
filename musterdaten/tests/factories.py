@@ -69,3 +69,7 @@ class ScoreFactory(factory.django.DjangoModelFactory):
     session_id = '1234'
     dataset = factory.SubFactory(DatasetFactory)
     modeldataset = factory.SubFactory(ModeldatasetFactory)
+
+class Top3Factory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Top3
