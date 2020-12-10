@@ -75,7 +75,7 @@ def show_top3(wizard):
     if not top3_modelsubjects:
         return False
 
-    top3_modelsubject_ids = [m["modeldataset__modelsubject__id"] for m in top3_modelsubjects]
+    top3_modelsubject_ids = [m.pk for m in top3_modelsubjects]
     return modelsubject.pk in top3_modelsubject_ids
 
 
@@ -125,25 +125,28 @@ class EvaluateFormView(SessionWizardView):
         context = super().get_context_data(form=form, **kwargs)
         if self.steps.current == "modelsubject":
             dataset = self.get_dataset_by_id(context.get("dataset_id"))
-            top3 = dataset.top3_modelsubjects.all()
+            top3 = dataset.top3_modelsubjects
             context.update({
                 "dataset": dataset,
+                "all_modelsubjects": Modelsubject.objects.all(),
                 "top3": top3,
                 })
         if self.steps.current == "top3":
             dataset = self.get_dataset_by_id(context.get("dataset_id"))
             data_step_one = self.get_cleaned_data_for_step("modelsubject") or {}
             modelsubject = data_step_one.get("modelsubject")
-            top3_dataset = dataset.top3_modeldatasets.filter(modeldataset__modelsubject__id=modelsubject.pk).all()
+            top3_dataset = dataset.top3_modeldatasets_by_modelsubject(modelsubject.pk)
             context.update({
                 "dataset": dataset,
                 "top3_dataset": top3_dataset,
             })
         if self.steps.current == "modeldatasets":
+            dataset = self.get_dataset_by_id(context.get("dataset_id"))
             data_step_one = self.get_cleaned_data_for_step("modelsubject") or {}
             modelsubject = data_step_one.get("modelsubject")
             all_datasets = modelsubject.modeldataset_set.all()
             context.update({
+                "dataset": dataset,
                 "all_datasets": all_datasets,
                 "modelsubject": modelsubject,
             })
@@ -163,5 +166,5 @@ class EvaluateFormView(SessionWizardView):
     def get_form_kwargs(self, step):
         dataset = self.get_dataset()
         if step == "top3":
-            return {"top3": dataset.top3_modelsubjects.all()}
+            return {"top3": dataset.top3_modelsubjects}
         return {}
