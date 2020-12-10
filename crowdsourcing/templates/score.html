@@ -21,11 +21,11 @@
       value="{{ subject.pk }}"
       x-on:click="setModelsubject({{ subject.pk }});"
     />
-    <span class="ml-2 text-gray-700 inline-block"
+    <span class="ml-2 text-2xl text-white inline-block"
       >{{ subject.title }}</span
     >
   </label>
-  <p class="ml-7">{{ subject.prediction_percentage }} % Wahrscheinlichkeit
+  <p class="ml-7 text-gray-700 ">{{ subject.prediction_percentage }} % Wahrscheinlichkeit
   {% include "question-mark.html" %}
   </p>
 </li>
