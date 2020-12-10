@@ -2,6 +2,7 @@ function score() {
   return {
     modeldataset: false,
     modelsubject: false,
+    popup: false,
     setModelsubject(id) {
       let el = document.querySelector('input.modelsubject[value="'+id+'"]')
       el.checked = true;
