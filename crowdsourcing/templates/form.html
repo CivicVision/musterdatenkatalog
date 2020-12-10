@@ -14,7 +14,7 @@
               <h2 class="md:hidden text-sm leading-5 text-white p-4">
                 Das Machine Learning Modell schlägt vor:
               </h2>
-							{% include "score/sidebar.html" %}
+							{% include "score/sidebar.html" with step=wizard.steps.current %}
               <form x-ref="foo" action="" method="post">{% csrf_token %}
                 <div class="hidden">
                 {{ wizard.management_form  }}
@@ -83,7 +83,7 @@
             </div>
             <div class="hidden md:block md:w-3/4 px-4 py-10">
               <!--SUBTILE-->
-              <h2 class="text-xl leading-5 text-white">
+              <h2 class="text-md leading-5 text-white">
                 {% block headline_text %}Das Machine Learning Modell schlägt vor:{% endblock %}
               </h2>
               <!--EO SUBTILE-->
@@ -99,7 +99,7 @@
               </button>
               <button
                 x-on:click.prevent="{% block secondary_action_desktop %}{% endblock %}"
-                class="px-4 py-2 text-primary-blue border-primary-blue mt-4 hover:bg-white"
+                class="px-4 py-2 text-white border border-2 border-primary-blue mt-4 hover:bg-white"
               >
                 {% block secondary_action_text_desktop %}{% endblock %}
               </button>

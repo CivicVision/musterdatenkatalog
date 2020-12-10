@@ -1,10 +1,16 @@
 <!--SIDEBAR-->
+{% load misc %}
+{% if step == "modeldatasets" or step == "top3" %}
+  {% setvar 2 as current_step %}
+{% else %}
+  {% setvar 1 as current_step %}
+{% endif %}
 <nav aria-label="Progress" class="hidden md:block">
   <ol class="overflow-hidden">
     <li class="relative pb-10">
       <!-- Current Step -->
       <div
-        class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-gradient-to-b from-primary-blue via-gray-300 to-gray-200"
+        class="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full {% if current_step == 2 %}bg-primary-blue{%else%}bg-gradient-to-b from-primary-blue via-gray-300 to-gray-200{%endif%}"
         aria-hidden="true"
       ></div>
       <a
@@ -14,11 +20,18 @@
       >
         <span class="h-9 flex items-center" aria-hidden="true">
           <span
-            class="relative z-10 w-8 h-8 flex items-center justify-center bg-white flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 border-primary-blue rounded-full group-hover:bg-primary-blue"
+            class="relative z-10 w-8 h-8 flex items-center justify-center flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 border-primary-blue rounded-full group-hover:bg-primary-blue {% if current_step == 2 %}bg-primary-blue{%else%}bg-white{%endif%}"
           >
-            <span class="text-gray-500 group-hover:text-white"
+            {% if current_step == 2 %}
+              <!-- Heroicon name: check -->
+              <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            {% else %}
+            <span class="text-primary-blue group-hover:text-white"
               >1</span
             >
+            {% endif %}
           </span>
         </span>
         <span class="ml-4 min-w-0 flex flex-col">
@@ -38,16 +51,16 @@
       >
         <span class="h-9 flex items-center" aria-hidden="true">
           <span
-            class="relative z-10 w-8 h-8 flex items-center justify-center bg-white flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 border-grey-500 rounded-full group-hover:bg-primary-blue"
+            class="relative z-10 w-8 h-8 flex items-center justify-center bg-white flex-shrink-0 z-10 w-8 h-8 flex items-center justify-center border-2 rounded-full group-hover:bg-primary-blue {% if current_step == 2 %}border-primary-blue{%else%}border-grey-500 {%endif%}"
           >
-            <span class="text-gray-400 group-hover:text-white"
+            <span class="group-hover:text-white {% if current_step == 2 %}text-primary-blue{%else%}text-gray-400 {%endif%}"
               >2</span
             >
           </span>
         </span>
         <span class="ml-4 min-w-0 flex flex-col">
           <span
-            class="text-md font-semibold uppercase tracking-wide text-gray-100"
+            class="text-md font-semibold uppercase tracking-wide  {% if current_step == 2 %}text-white{%else%}text-gray-100 {%endif%}"
             >Bezeichnung</span
           >
         </span>
