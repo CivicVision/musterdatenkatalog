@@ -182,3 +182,16 @@ class Top3Modeldataset(Prediction):
         self.pk = entry.get('modeldataset_id')
         self.title = entry.get('modeldataset__title')
         self.pred = entry.get('pred')
+
+class NoMatchScore(models.Model):
+     created_at = models.DateTimeField(auto_now_add=True)
+     dataset = models.ForeignKey(to=Dataset, on_delete=models.PROTECT)
+     session_id = models.CharField(max_length=32)
+     topic = models.CharField(max_length=255)
+     term = models.CharField(max_length=255)
+
+     class Meta:
+         ordering = ['id']
+
+     def __str__(self):
+         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.text

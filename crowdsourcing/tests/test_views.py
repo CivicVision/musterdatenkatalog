@@ -48,11 +48,11 @@ class TestEvaluate(TestCase):
         wizard_step_data = (
             {
                 'dataset': evaluate_wizard_first_step_form,
-                'evaluate_form_view-current_step': 'dataset',
+                'evaluate_form_view-current_step': 'modelsubject',
             },
             {
                 'dataset': evaluate_wizard_second_step_form,
-                'evaluate_form_view-current_step': 'modelsubjects',
+                'evaluate_form_view-current_step': 'top3',
             },
             {
                 'dataset': evaluate_wizard_third_step_form,
