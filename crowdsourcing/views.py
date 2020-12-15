@@ -120,11 +120,12 @@ class EvaluateFormView(SessionWizardView):
 
         modeldataset = modeldataset_step_two or modeldataset_step_three
         dataset_id = self.get_dataset().pk
+        session_id = self.get_session_id()
         if modeldataset:
             Score.objects.create(
                 dataset_id=dataset_id,
                 modeldataset=modeldataset,
-                session_id=uuid.uuid4().__str__()[:32]
+                session_id=session_id
             )
         else:
             data_step_four = self.get_cleaned_data_for_step("write_in") or {}
@@ -134,10 +135,18 @@ class EvaluateFormView(SessionWizardView):
                 dataset_id=dataset_id,
                 topic=topic,
                 term=term,
-                session_id=uuid.uuid4().__str__()[:32]
+                session_id=session_id
             )
 
         return HttpResponseRedirect(reverse_lazy("crowdsourcing:evaluate"))
+
+    def get_session_id(self):
+         session_id = self.request.COOKIES.get("sessionid")
+         if session_id:
+             return session_id
+         if "session_id" in self.storage.extra_data:
+             return self.storage.extra_data.get("session_id")
+         return uuid.uuid4().__str__()[:32]
 
     def get_dataset_by_id(self, pk):
         return Dataset.objects.get(pk=pk)
@@ -180,7 +189,7 @@ class EvaluateFormView(SessionWizardView):
         initial = {}
         if step == "modelsubject":
             dataset = self.get_dataset()
-            self.storage.extra_data = {"dataset_id": dataset.pk}
+            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id()}
             initial["dataset_id"] = dataset.pk
             initial["dataset"] = dataset
         if step == "write_in":

@@ -3,8 +3,6 @@
 {%  for subject in top3  %}
   <li class="bg-primary-blue p-4 border-b text-xl relative">
     {{ subject.title }}
-    <span class="block text-sm">{{ subject.pred }} Wahrscheinlichkeit</span>
-    {% include "question-mark.html" %}
   </li>
 {% endfor %}
 {% endblock %}
@@ -25,9 +23,6 @@
       >{{ subject.title }}</span
     >
   </label>
-  <p class="ml-7 text-gray-700 ">{{ subject.prediction_percentage }} % Wahrscheinlichkeit
-  {% include "question-mark.html" %}
-  </p>
 </li>
 {% endfor %}
 {% endblock %}

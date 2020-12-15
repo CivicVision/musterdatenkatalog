@@ -3,7 +3,7 @@
 {% load misc %}
 {% block content %}
 <main class="">
-  {% include "score/header.html" with categories=dataset.categories.all|join_by_attr:'title' title=dataset.title %}
+  {% include "score/header.html" with  title=dataset.title %}
 
   <div class="bg-primary-blue" x-data="score()">
         <div class="px-2 md:px-0 space-y-0.5 max-w-4xl mx-auto">
@@ -142,7 +142,36 @@
           </div>
           {% endwith %}
 
-          {% include "data-entry.html" with title="Geändert am" text=dataset.updated_at %}
+          <div class="relative px-6 py-5 bg-white">
+            <span class="block text-sm font-medium leading-5 uppercase text-primary-blue md:text-xl">Link zum Portal</span>
+            <svg
+              class="w-9 h-6 text-black"
+              viewBox="0 0 48 24"
+              shape-rendering="crispEdges"
+              xmlns="http://www.w3.org/2000/svg"
+              >
+              <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+            </svg>
+              <div class="leading-5 md:text-xl">
+                <a href="{{dataset.url}}" target="_blank">{{dataset.url}}</a>
+              </div>
+          </div>
+          <div class="relative px-6 py-5 bg-white">
+            <span class="block text-sm font-medium leading-5 uppercase text-primary-blue md:text-xl">Kategorien aus dem Datensatz</span>
+            <svg
+              class="w-9 h-6 text-black"
+              viewBox="0 0 48 24"
+              shape-rendering="crispEdges"
+              xmlns="http://www.w3.org/2000/svg"
+              >
+              <line x1="0" y1="12" x2="48" y2="12" stroke-width="2" stroke="currentColor" />
+            </svg>
+              <div class="leading-5 md:text-xl">
+                {{dataset.categories.all|join_by_attr:'title'}}
+              </div>
+          </div>
+          {% include "data-entry.html" with title="Stadt" text=dataset.city %}
+          {% include "data-entry.html" with title="Geändert am" text=dataset.metadata_updated_at %}
 					</section>
         </div>
       </div>
