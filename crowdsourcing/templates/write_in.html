@@ -1,0 +1,30 @@
+{% extends 'form.html' %}
+{% block data_mobile %}
+
+{% endblock %}
+{% block data_desktop %}
+<div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+  <div class="sm:col-span-4">
+    <label for="first_name" class="block text-sm font-medium text-gray-100">
+      Thema
+    </label>
+    <div class="mt-1">
+      <input type="text" id="topic" name="topic" placeholder="Thema" x-model="topic" class="p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 ">
+    </div>
+  </div>
+
+  <div class="sm:col-span-4">
+    <label for="email" class="block text-sm font-medium text-gray-100">
+      Bezeichnung
+    </label>
+    <div class="mt-1">
+      <input type="text" name="term" placeholder="Bezeichnung" x-model="term" class="p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300">
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block headline_text %}Was schlägst du vor?{% endblock %}
+{% block primary_action_desktop %}$refs.foo.submit();{% endblock %}
+{% block primary_action_text_desktop %}Abschicken{% endblock %}
+{% block secondary_action_desktop %}$refs.foo.submit();{% endblock %}
+{% block secondary_action_text_desktop %}Weiß ich nicht, weiter{% endblock %}

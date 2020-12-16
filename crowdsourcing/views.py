@@ -7,8 +7,8 @@ from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 
 from crowdsourcing.forms import EvaluateWizardFirstStepForm, EvaluateWizardSecondStepForm, \
-    EvaluateWizardThirdStepForm
-from musterdaten.models import Dataset, Modelsubject, Score
+    EvaluateWizardThirdStepForm, EvaluateWizardFourthStepForm
+from musterdaten.models import Dataset, Modelsubject, Score, NoMatchScore
 
 
 class IndexView(TemplateView):
@@ -55,13 +55,15 @@ class ModelsubjectDatasetView(SingleObjectMixin, ListView):
 
 FORMS = [("modelsubject", EvaluateWizardFirstStepForm),
          ("top3", EvaluateWizardSecondStepForm),
-         ("modeldatasets", EvaluateWizardThirdStepForm)
+         ("modeldatasets", EvaluateWizardThirdStepForm),
+         ("write_in", EvaluateWizardFourthStepForm)
          ]
 
 TEMPLATES = {
     "modelsubject": "score.html",
     "top3": "score_dataset.html",
-    "modeldatasets": "score_all_datasets.html"
+    "modeldatasets": "score_all_datasets.html",
+    "write_in": "write_in.html"
 }
 
 
@@ -69,7 +71,7 @@ def show_top3(wizard):
     cleaned_data_step_one = wizard.get_cleaned_data_for_step("modelsubject") or {}
     modelsubject = cleaned_data_step_one.get("modelsubject")
     if not modelsubject:
-        return True
+        return False
 
     top3_modelsubjects = wizard.get_form_kwargs("top3").get("top3")
     if not top3_modelsubjects:
@@ -80,17 +82,30 @@ def show_top3(wizard):
 
 
 def show_modeldatasets_for_modelsubjects(wizard):
+    cleaned_data_step_one = wizard.get_cleaned_data_for_step("modelsubject") or {}
     data_step_two = wizard.get_cleaned_data_for_step("top3") or {}
+    modelsubject = cleaned_data_step_one.get("modelsubject")
     modeldataset = data_step_two.get("modeldataset")
-    second_condition = False if modeldataset else True
+    second_condition = True if not modeldataset and modelsubject else False
     return second_condition
 
+def show_write_in_step(wizard):
+    cleaned_data_step_one = wizard.get_cleaned_data_for_step("modelsubject") or {}
+    data_step_two = wizard.get_cleaned_data_for_step("top3") or {}
+    data_step_three = wizard.get_cleaned_data_for_step("modeldatasets") or {}
+    write_in = wizard.get_cleaned_data_for_step("write_in") or {}
+    term = write_in.get("term")
+    topic = write_in.get("topic")
+    modelsubject = cleaned_data_step_one.get("modelsubject")
+    modeldataset = data_step_two.get("modeldataset") or data_step_three.get("modeldataset")
+    return True if (not modeldataset and not modelsubject) or (modelsubject and not modeldataset) else False
 
 class EvaluateFormView(SessionWizardView):
     condition_dict = {
         "modelsubject": True,
         "top3": show_top3,
-        "modeldatasets": show_modeldatasets_for_modelsubjects
+        "modeldatasets": show_modeldatasets_for_modelsubjects,
+        "write_in": show_write_in_step
     }
 
     def get_template_names(self):
@@ -106,11 +121,22 @@ class EvaluateFormView(SessionWizardView):
         modeldataset = modeldataset_step_two or modeldataset_step_three
         dataset_id = self.get_dataset().pk
         session_id = self.get_session_id()
-        Score.objects.create(
-            dataset_id=dataset_id,
-            modeldataset=modeldataset,
-            session_id=session_id
-        )
+        if modeldataset:
+            Score.objects.create(
+                dataset_id=dataset_id,
+                modeldataset=modeldataset,
+                session_id=session_id
+            )
+        else:
+            data_step_four = self.get_cleaned_data_for_step("write_in") or {}
+            topic = data_step_four.get("topic")
+            term = data_step_four.get("term")
+            NoMatchScore.objects.create(
+                dataset_id=dataset_id,
+                topic=topic,
+                term=term,
+                session_id=session_id
+            )
 
         return HttpResponseRedirect(reverse_lazy("crowdsourcing:evaluate"))
 
@@ -132,30 +158,28 @@ class EvaluateFormView(SessionWizardView):
 
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)
+        dataset = self.get_dataset_by_id(context.get("dataset_id"))
+        context.update({
+            "dataset": dataset,
+        })
         if self.steps.current == "modelsubject":
-            dataset = self.get_dataset_by_id(context.get("dataset_id"))
             top3 = dataset.top3_modelsubjects
             context.update({
-                "dataset": dataset,
                 "all_modelsubjects": Modelsubject.objects.all(),
                 "top3": top3,
                 })
         if self.steps.current == "top3":
-            dataset = self.get_dataset_by_id(context.get("dataset_id"))
             data_step_one = self.get_cleaned_data_for_step("modelsubject") or {}
             modelsubject = data_step_one.get("modelsubject")
             top3_dataset = dataset.top3_modeldatasets_by_modelsubject(modelsubject.pk)
             context.update({
-                "dataset": dataset,
                 "top3_dataset": top3_dataset,
             })
         if self.steps.current == "modeldatasets":
-            dataset = self.get_dataset_by_id(context.get("dataset_id"))
             data_step_one = self.get_cleaned_data_for_step("modelsubject") or {}
             modelsubject = data_step_one.get("modelsubject")
             all_datasets = modelsubject.modeldataset_set.all()
             context.update({
-                "dataset": dataset,
                 "all_datasets": all_datasets,
                 "modelsubject": modelsubject,
             })
@@ -168,8 +192,10 @@ class EvaluateFormView(SessionWizardView):
             self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id()}
             initial["dataset_id"] = dataset.pk
             initial["dataset"] = dataset
-            initial["modelsubject"] = dataset.modeldataset.modelsubject
-            initial["modeldataset"] = dataset.modeldataset
+        if step == "write_in":
+            data_step_one = self.get_cleaned_data_for_step("modelsubject") or {}
+            modelsubject = data_step_one.get("modelsubject")
+            initial["topic"] = modelsubject.title if modelsubject else ""
         return self.initial_dict.get(step, initial)
 
     def get_form_kwargs(self, step):

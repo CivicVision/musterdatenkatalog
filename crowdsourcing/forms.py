@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ValidationError, Form, ModelChoiceField, RadioSelect
+from django.forms import ModelForm, ValidationError, Form, ModelChoiceField, RadioSelect, CharField, TextInput
 from musterdaten.models import Score, Modelsubject, Modeldataset
 
 
@@ -18,7 +18,7 @@ class ScoreForm(ModelForm):
 
 
 class EvaluateWizardFirstStepForm(Form):
-    modelsubject = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modelsubject'}), queryset=Modelsubject.objects.all())
+    modelsubject = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modelsubject'}), queryset=Modelsubject.objects.all(), required=False)
 
 
 class EvaluateWizardSecondStepForm(Form):
@@ -30,4 +30,9 @@ class EvaluateWizardSecondStepForm(Form):
 
 
 class EvaluateWizardThirdStepForm(Form):
-    modeldataset = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modeldataset'}), queryset=Modeldataset.objects.all())
+    modeldataset = ModelChoiceField(widget=RadioSelect(attrs={'class': 'modeldataset'}), queryset=Modeldataset.objects.all(), required=False)
+
+
+class EvaluateWizardFourthStepForm(Form):
+    topic = CharField(widget=TextInput(attrs={"x-model":"topic"}),required=False)
+    term = CharField(widget=TextInput(attrs={"x-bind:value":"term"}),required=False)
