@@ -153,7 +153,8 @@ STATIC_URL = '/static/'
 
 TAILWIND_APP_NAME = 'crowdsourcing'
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 if 'SECRET_KEY' in os.environ:
     logger.info('Adding $SECRET_KEY to SECRET_KEY Django setting.')
