@@ -1,7 +1,9 @@
 import os
+import logging
 
-import django_heroku
+import dj_database_url
 
+logger = logging.getLogger(__name__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'catalog.middleware.TurbolinksMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -39,7 +42,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'catalog.urls'
@@ -95,6 +97,39 @@ REST_FRAMEWORK = {
     ]
 }
 
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': ('%(asctime)s [%(process)d] [%(levelname)s] ' +
+                    'pathname=%(pathname)s lineno=%(lineno)s ' +
+                    'funcname=%(funcName)s %(message)s'),
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+                },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+                }
+            },
+        'handlers': {
+            'null': {
+                'level': 'DEBUG',
+                'class': 'logging.NullHandler',
+                },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+                }
+            },
+        'loggers': {
+            'testlogger': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                }
+            }
+        }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -118,4 +153,12 @@ STATIC_URL = '/static/'
 
 TAILWIND_APP_NAME = 'crowdsourcing'
 
-django_heroku.settings(locals())
+DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+
+if 'SECRET_KEY' in os.environ:
+    logger.info('Adding $SECRET_KEY to SECRET_KEY Django setting.')
+    # Set the Django setting from the environment variable.
+    config['SECRET_KEY'] = os.environ['SECRET_KEY']
+
+if 'DEBUG' in os.environ:
+    config['DEBUG'] = os.environ['DEBUG']
