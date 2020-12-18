@@ -13,7 +13,7 @@
     class="bg-white bg-opacity-30 p-4 border-primary-blue text-xl relative"
     :class="{ 'border-b-2': !showAllSubjects }"
     >
-    <span>{% ifequal top3|length 1 %}Ein anderes Thema auswählen{%else %}Keines der Themen{% endifequal %}</span>
+    <span>Ein anderes Thema auswählen</span>
     <div class="w-6 h-6 absolute right-0 inline-block">
       <div class="" x-show="!showAllSubjects">
         {% include "chevron-right.html" with classes=" w-6 h-6 inline-block md:hidden" %}
@@ -49,7 +49,7 @@
 {% block primary_action_desktop %}$refs.foo.submit();{% endblock %}
 {% block primary_action_text_desktop %}Weiter zur Bezeichnung{% endblock %}
 {% block secondary_action_desktop %}popup = true;{% endblock %}
-{% block secondary_action_text_desktop %}Keines der genannten Themen{% endblock %}
+{% block secondary_action_text_desktop %}Ein anderes Thema auswählen{% endblock %}
 {% block modal %}
 <div x-cloak x-show="popup" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed z-10 inset-0 overflow-y-auto">
 	<div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
