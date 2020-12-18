@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}{{dataset.title}}{% endblock %}
 {% block body_class %} relative font-sans bg-primary-blue {% endblock %}
 {% load misc %}
 {% block content %}
@@ -12,9 +13,16 @@
               class="w-full md:w-1/4 p-0 md:p-4 border-0 md:border-r-2 md:border-primary-blue"
             >
               <h2 class="md:hidden text-sm leading-5 text-white p-4">
-                Das Machine Learning Modell schlägt vor:
+                {% block headline_text_mobile %}Das Machine Learning Modell schlägt vor:{% endblock %}
               </h2>
-							{% include "score/sidebar.html" with step=wizard.steps.current %}
+              {% if wizard.steps.current == "modeldatasets" or wizard.steps.current == "top3" %}
+                {% setvar 2 as current_step %}
+              {% elif wizard.steps.current == "write_in" %}
+                {% setvar 3 as current_step %}
+              {% else %}
+                {% setvar 1 as current_step %}
+              {% endif %}
+							{% include "score/sidebar.html" with current_step=current_step %}
               <form x-ref="foo" action="" method="post">{% csrf_token %}
                 <div class="hidden">
                 {{ wizard.management_form  }}
@@ -35,26 +43,117 @@
                 >
                   <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
                     <span
-                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
-                      >1</span
+                      class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2 {% if current_step == 2 %}bg-primary-blue{%else%}white{% endif %}"
+                      >
+                      {% if current_step == 2 %}
+                        <!-- Heroicon name: check -->
+                        <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      {% else %}
+                        1
+                      {% endif %}
+                    </span
                     >
-                    Thema
-                    <svg
-                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
+                    <span class="">
+                      Thema{% if current_step == 2 %}: {{modelsubject}}{% endif %}
+                    </span>
+                    {% if current_step == 1 %}
+                      {% include "chevron-down.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
+                    {% else %}
+                      {% include "chevron-up.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
+                    {% endif %}
                   </a>
-            <ul id="sub" class="text-white md:hidden">
-            {% block data_mobile %}{% endblock %}
+                  <ul id="sub" x-cloak class="text-white bg-primary-blue md:hidden">
+                    {% block data_mobile %}{% endblock %}
                   </ul>
+                   <div
+                     id="all-subject md:hidden"
+                     x-show="showAllSubjects">
+                    <div
+                      class="flex justify-between items-start space-x-6 bg-primary-blue py-4"
+                    >
+                      <!-- A-F -->
+                      <a href="#A" class="w-1/4 px-1 py-4 text-center bg-white">
+                        <span
+                          class="text-sm font-medium leading-6 tracking-widest text-black"
+                          >A-F</span
+                        >
+                      </a>
+
+                      <!-- G-L -->
+                      <a
+                        href="#G"
+                        class="w-1/4 px-1 py-4 text-center bg-white md:w-32"
+                      >
+                        <span
+                          class="text-sm font-medium leading-6 tracking-widest text-black"
+                          >G-L</span
+                        >
+                      </a>
+
+                      <!-- M-R -->
+                      <a
+                        href="#M"
+                        class="w-1/4 px-1 py-4 text-center bg-white md:w-32"
+                      >
+                        <span
+                          class="text-sm font-medium leading-6 tracking-widest text-black"
+                          >M-R</span
+                        >
+                      </a>
+
+                      <!-- S-Z -->
+                      <a
+                        href="#S"
+                        class="w-1/4 px-1 py-4 text-center bg-white md:w-32"
+                      >
+                        <span
+                          class="text-sm font-medium leading-6 tracking-widest text-black"
+                          >S-Z</span
+                        >
+                      </a>
+                    </div>
+                    <!--TOPIC-->
+                    <div
+                      class="pt-2 flex-grow overflow-y-auto space-y-0.5 md:space-y-2 bg-primary-blue"
+                    >
+                      {% regroup all_modelsubjects by first_letter as letter_list %}
+                      {% for letter in letter_list %}
+                      <!-- A -->
+                      <a name="{{ letter.grouper }}"></a>
+                      <div class="bg-white bg-opacity-20">
+                        <!-- Head -->
+                        <div
+                          class="px-3 py-2 bg-white bg-opacity-25 md:px-6 md:py-3"
+                        >
+                          <span
+                            class="text-2xl font-medium leading-7 text-white"
+                            >{{ letter.grouper }}</span
+                          >
+                        </div>
+                        <!-- Topics -->
+                        <div class="">
+                          <ul class="md:space-y-4">
+                            {% for item in letter.list %}
+                            <li class="py-4 px-3 {% if not forloop.last %}border-b border-white{% endif %}">
+                              <a
+                                class="inline-block text-2xl leading-4 text-white md:text-xl"
+                                @click.prevent="setModelsubject({{ item.pk }});$refs.foo.submit();"
+                                href=""
+                                >
+                                {{item.title}}
+                                {% include "chevron-right.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
+                              </a>
+                            </li>
+                           {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <!-- eo all subject -->
                 </li>
                 <li
                   class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
@@ -65,19 +164,15 @@
                       >2</span
                     >
                     Bezeichnung
-                    <svg
-                      class="w-6 h-6 inline-block absolute right-0 md:hidden"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
+                    {% if current_step == 2 %}
+                      {% include "chevron-down.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
+                    {% else %}
+                      {% include "chevron-right.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
+                    {% endif %}
                   </a>
+                  <ul id="sub" class="text-white bg-primary-blue md:hidden">
+                    {% block data_mobile_step_2 %}{% endblock %}
+                  </ul>
                 </li>
               </ul>
             </div>

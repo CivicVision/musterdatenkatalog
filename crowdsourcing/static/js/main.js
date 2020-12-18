@@ -6,6 +6,7 @@ function score() {
   return {
     modeldataset: false,
     modelsubject: false,
+    showAllSubjects: false,
     topic: getWriteInTopic(),
     term: '',
     popup: false,

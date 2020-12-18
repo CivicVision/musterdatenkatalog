@@ -1,10 +1,28 @@
 {% extends 'form.html' %}
 {% block data_mobile %}
 {%  for subject in top3  %}
-  <li class="bg-primary-blue p-4 border-b text-xl relative">
-    {{ subject.title }}
+  <li
+    x-on:click="setModelsubject({{ subject.pk }});$refs.foo.submit(); "
+    class="bg-white bg-opacity-30 p-4 border-b text-xl relative">
+    <span> {{ subject.title }}</span>
+    {% include "chevron-right.html" with classes=" w-6 h-6 inline-block absolute right-0 md:hidden" %}
   </li>
 {% endfor %}
+  <li
+    x-on:click="showAllSubjects=true;"
+    class="bg-white bg-opacity-30 p-4 border-primary-blue text-xl relative"
+    :class="{ 'border-b-2': !showAllSubjects }"
+    >
+    <span>{% ifequal top3|length 1 %}Ein anderes Thema auswählen{%else %}Keines der Themen{% endifequal %}</span>
+    <div class="w-6 h-6 absolute right-0 inline-block">
+      <div class="" x-show="!showAllSubjects">
+        {% include "chevron-right.html" with classes=" w-6 h-6 inline-block md:hidden" %}
+      </div>
+      <div class="" x-show="showAllSubjects">
+        {% include "chevron-down.html" with classes=" w-6 h-6 inline-block md:hidden" %}
+      </div>
+    </div>
+  </li>
 {% endblock %}
 {% block data_desktop %}
 {%  for subject in top3  %}
@@ -27,6 +45,7 @@
 {% endfor %}
 {% endblock %}
 {% block headline_text %}Das Machine Learning Modell schlägt als Thema vor:{% endblock %}
+{% block headline_text_mobile %}Das Machine Learning Modell schlägt als Thema vor:{% endblock %}
 {% block primary_action_desktop %}$refs.foo.submit();{% endblock %}
 {% block primary_action_text_desktop %}Weiter zur Bezeichnung{% endblock %}
 {% block secondary_action_desktop %}popup = true;{% endblock %}
