@@ -52,7 +52,6 @@ class Command(BaseCommand):
                     city = City.objects.get(name=city_name)
                     dataset = Dataset.objects.filter(
                         title=dataset_title,
-                        modeldataset=modeldataset,
                         city=city
                     ).first()
 
