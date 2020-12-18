@@ -11,6 +11,11 @@ class Top3tInline(admin.TabularInline):
 class DatasetAdmin(admin.ModelAdmin):
     inlines = (Top3tInline,)
 
+class ModeldatasetInline(admin.StackedInline):
+    model = Modeldataset
+
+class ModelsubjectAdmin(admin.ModelAdmin):
+    inlines = (ModeldatasetInline,)
 
 
 admin.site.unregister(Group)
@@ -22,6 +27,6 @@ admin.site.register(Category)
 admin.site.register(License)
 admin.site.register(Modeldataset)
 admin.site.register(State)
-admin.site.register(Modelsubject)
+admin.site.register(Modelsubject, ModelsubjectAdmin)
 admin.site.register(Leika)
 
