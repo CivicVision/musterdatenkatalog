@@ -173,6 +173,7 @@ class EvaluateFormView(SessionWizardView):
             modelsubject = data_step_one.get("modelsubject")
             top3_dataset = dataset.top3_modeldatasets_by_modelsubject(modelsubject.pk)
             context.update({
+                "modelsubject": modelsubject,
                 "top3_dataset": top3_dataset,
             })
         if self.steps.current == "modeldatasets":

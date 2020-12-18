@@ -1,5 +1,30 @@
 {% extends 'form.html' %}
-{% block data_mobile %}
+{% block data_mobile_step_2 %}
+<div class="bg-opacity-30 bg-white py-4 px-2 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+  <div class="sm:col-span-4">
+    <label for="first_name" class="block text-sm font-medium text-gray-100">
+      Thema
+    </label>
+    <div class="mt-1">
+      <input type="text" id="topic-mobile" name="topic" placeholder="Thema" x-model="topic" class="p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 text-gray-900">
+    </div>
+  </div>
+
+  <div class="sm:col-span-4">
+    <label for="email" class="block text-sm font-medium text-gray-100">
+      Bezeichnung
+    </label>
+    <div class="mt-1">
+      <input type="text" name="term" placeholder="Bezeichnung" x-model="term" class="p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 text-gray-900">
+    </div>
+  </div>
+  <div class="sm:col-span-4">
+    <button 
+      type="submit"
+      x-on:click="$refs.foo.submit();"
+      class="p-2 bg-white border-primary-blue border-2 w-full text-primary-blue text-left">Absenden</button>
+  </div>
+</div>
 
 {% endblock %}
 {% block data_desktop %}
@@ -24,6 +49,7 @@
 </div>
 {% endblock %}
 {% block headline_text %}Was schlägst du vor?{% endblock %}
+{% block headline_text_mobile %}Was schlägst du vor?{% endblock %}
 {% block primary_action_desktop %}$refs.foo.submit();{% endblock %}
 {% block primary_action_text_desktop %}Abschicken{% endblock %}
 {% block secondary_action_desktop %}$refs.foo.submit();{% endblock %}

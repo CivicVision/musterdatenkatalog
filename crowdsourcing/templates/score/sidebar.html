@@ -1,10 +1,5 @@
 <!--SIDEBAR-->
 {% load misc %}
-{% if step == "modeldatasets" or step == "top3" %}
-  {% setvar 2 as current_step %}
-{% else %}
-  {% setvar 1 as current_step %}
-{% endif %}
 <nav aria-label="Progress" class="hidden md:block">
   <ol class="overflow-hidden">
     <li class="relative pb-10">
