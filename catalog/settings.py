@@ -159,7 +159,7 @@ if 'DATABASE_URL' in os.environ:
 if 'SECRET_KEY' in os.environ:
     logger.info('Adding $SECRET_KEY to SECRET_KEY Django setting.')
     # Set the Django setting from the environment variable.
-    config['SECRET_KEY'] = os.environ['SECRET_KEY']
+    SECRET_KEY = os.environ['SECRET_KEY']
 
 if 'DEBUG' in os.environ:
-    config['DEBUG'] = os.environ['DEBUG']
+    DEBUG = os.environ['DEBUG']
