@@ -154,7 +154,11 @@ class EvaluateFormView(SessionWizardView):
     def get_dataset(self):
         if "dataset_id" in self.storage.extra_data:
             return self.get_dataset_by_id(self.storage.extra_data.get("dataset_id"))
-        return Dataset.objects.order_by("?").first()
+        dataset_ids = Score.objects.filter(session_id=self.get_session_id()).values_list("dataset_id").distinct()
+        dataset = Dataset.objects.exclude(id__in=dataset_ids).order_by("?").first()
+        if "dataset_id" not in self.storage.extra_data:
+            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id()}
+        return dataset
 
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)
@@ -190,7 +194,6 @@ class EvaluateFormView(SessionWizardView):
         initial = {}
         if step == "modelsubject":
             dataset = self.get_dataset()
-            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id()}
             initial["dataset_id"] = dataset.pk
             initial["dataset"] = dataset
         if step == "write_in":
