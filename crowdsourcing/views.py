@@ -19,6 +19,10 @@ class UeberView(TemplateView):
     template_name = "ueber.html"
 
 
+class ImpressumView(TemplateView):
+    template_name = "impressum.html"
+
+
 class AllSubjectsView(ListView):
     template_name = "all_subjects.html"
 
