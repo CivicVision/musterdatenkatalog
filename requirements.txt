@@ -18,3 +18,4 @@ whitenoise
 django-extensions
 django-formtools
 dj-database-url
+yacryptopan
