@@ -148,6 +148,7 @@ class Score(models.Model):
     dataset = models.ForeignKey(to=Dataset, on_delete=models.PROTECT)
     modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
     session_id = models.CharField(max_length=32)
+    user = models.ForeignKey(to="CustomUser", on_delete=models.PROTECT, blank=True, null=True)
 
     class Meta:
         verbose_name = "Bewertung"
@@ -195,3 +196,6 @@ class NoMatchScore(models.Model):
 
      def __str__(self):
          return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.text
+
+class CustomUser(models.Model):
+     ip_address = models.CharField(max_length=100)
