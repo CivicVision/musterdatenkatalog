@@ -13,11 +13,16 @@ from musterdaten.models import (
     Leika,
     Top3,
     NoMatchScore,
+    CustomUser,
 )
 
 class Top3tInline(admin.TabularInline):
     model = Top3
     extra = 3
+
+
+class ScoreInlineAdmin(admin.StackedInline):
+    model = Score
 
 
 class DatasetAdmin(admin.ModelAdmin):
@@ -34,6 +39,12 @@ class ModelsubjectAdmin(admin.ModelAdmin):
     inlines = (ModeldatasetInline,)
 
 
+class CustomUserAdmin(admin.ModelAdmin):
+     model = CustomUser
+     list_display = ("pk", "ip_address")
+     inlines = (ScoreInlineAdmin, )
+
+    
 class ScoreInlineAdmin(admin.StackedInline):
      model = Score
 
@@ -55,6 +66,7 @@ class NoMatchScoreAdmin(admin.ModelAdmin):
     list_display = ("dataset", "session_id", "topic", "term")
 
 
+
 admin.site.unregister(Group)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(NoMatchScore, NoMatchScoreAdmin)
@@ -67,4 +79,4 @@ admin.site.register(Modeldataset, ModeldatasetAdmin)
 admin.site.register(State)
 admin.site.register(Modelsubject, ModelsubjectAdmin)
 admin.site.register(Leika)
-
+admin.site.register(CustomUser, CustomUserAdmin)

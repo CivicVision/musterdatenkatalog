@@ -1,14 +1,19 @@
 import uuid
+import os
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView
 from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
+from yacryptopan import CryptoPAn
 
 from crowdsourcing.forms import EvaluateWizardFirstStepForm, EvaluateWizardSecondStepForm, \
     EvaluateWizardThirdStepForm, EvaluateWizardFourthStepForm
-from musterdaten.models import Dataset, Modelsubject, Score, NoMatchScore
+from musterdaten.models import Dataset, Modelsubject, Score, CustomUser, NoMatchScore
+
+KEY = bytes(os.environ.get("CRYPTOPAN_KEY", "CHANGETHISKEYINPRODUCTIONPLEASE!"), "utf-8")
+cp = CryptoPAn(key=KEY)
 
 
 class IndexView(TemplateView):
@@ -125,11 +130,13 @@ class EvaluateFormView(SessionWizardView):
         modeldataset = modeldataset_step_two or modeldataset_step_three
         dataset_id = self.get_dataset().pk
         session_id = self.get_session_id()
+        user_id = self.get_user().pk
         if modeldataset:
             Score.objects.create(
                 dataset_id=dataset_id,
                 modeldataset=modeldataset,
-                session_id=session_id
+                session_id=session_id,
+                user_id=user_id,
             )
         else:
             data_step_four = self.get_cleaned_data_for_step("write_in") or {}
@@ -139,7 +146,8 @@ class EvaluateFormView(SessionWizardView):
                 dataset_id=dataset_id,
                 topic=topic,
                 term=term,
-                session_id=session_id
+                session_id=session_id,
+                user_id=user_id,
             )
 
         return HttpResponseRedirect(reverse_lazy("crowdsourcing:evaluate"))
@@ -152,6 +160,18 @@ class EvaluateFormView(SessionWizardView):
              return self.storage.extra_data.get("session_id")
          return uuid.uuid4().__str__()[:32]
 
+    def get_user_by_id(self, pk):
+        return CustomUser.objects.get(pk=pk)
+
+    def get_user(self):
+        if "user_id" in self.storage.extra_data:
+            return self.get_user_by_id(self.storage.extra_data.get("user_id"))
+
+        ip_address = cp.anonymize(self.request.META.get("REMOTE_ADDR") or "127.0.0.1")
+        user, created = CustomUser.objects.get_or_create(ip_address=ip_address)
+
+        return user
+
     def get_dataset_by_id(self, pk):
         return Dataset.objects.get(pk=pk)
 
@@ -161,7 +181,8 @@ class EvaluateFormView(SessionWizardView):
         dataset_ids = Score.objects.filter(session_id=self.get_session_id()).values_list("dataset_id").distinct()
         dataset = Dataset.objects.exclude(id__in=dataset_ids).order_by("?").first()
         if "dataset_id" not in self.storage.extra_data:
-            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id()}
+            user = self.get_user()
+            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id(), "user_id": user.pk}
         return dataset
 
     def get_context_data(self, form, **kwargs):
