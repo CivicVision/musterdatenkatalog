@@ -1,11 +1,14 @@
 import csv
+
 from urllib import request
 
 from django.core.management import BaseCommand
+
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
 from musterdaten import services
+
 
 def get_data(url):
     val = URLValidator()
@@ -15,15 +18,15 @@ def get_data(url):
         lines = [line.decode('utf-8') for line in response.readlines()]
     except ValidationError:
         response = open(url, 'r')
-        lines = response.readlines()
+    lines = response.readlines()
     return lines
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
                 '--url', dest='url', required=True,
-                help='The URL of the CSV file to be imported',
+                help='The URL of the CSV file to be updated',
                 )
 
     def handle(self, *args, **options):
@@ -40,9 +43,8 @@ class Command(BaseCommand):
             else:
                 try:
                     line_count += 1
-
                     data = services.read_row(row)
-                    services.create_all_models(data)
+                    services.update_models(data)
 
                 except Exception as e:
                     print(f"\033[91mImport failed - Dataset: {row[0]} - Modeldataset: {row[3]} [{e}]")
