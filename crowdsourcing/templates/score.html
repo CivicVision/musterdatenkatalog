@@ -10,8 +10,8 @@
 {% endfor %}
   <li
     x-on:click="showAllSubjects=true;"
-    class="bg-white bg-opacity-30 p-4 border-primary-blue text-xl relative"
-    :class="{ 'border-b-2': !showAllSubjects }"
+    class="bg-white bg-opacity-30 p-4 text-xl relative"
+    :class="{ 'border-b': !showAllSubjects, 'border-primary-blue': showAllSubjects  }"
     >
     <span>Ein anderes Thema auswählen</span>
     <div class="w-6 h-6 absolute right-0 inline-block">
