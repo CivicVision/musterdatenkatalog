@@ -24,6 +24,10 @@ class UeberView(TemplateView):
     template_name = "ueber.html"
 
 
+class DatenschutzView(TemplateView):
+    template_name = "datenschutz.html"
+
+
 class ImpressumView(TemplateView):
     template_name = "impressum.html"
 
