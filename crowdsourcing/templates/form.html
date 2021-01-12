@@ -34,6 +34,10 @@
                 {% else %}
                 {{ wizard.form  }}
                 {% endif %}
+                {% if wizard.steps.prev %}
+                  <button id="prev" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">prev step</button>
+                {% endif %}
+                <button id="goto-thema" name="wizard_goto_step" type="submit" value="modelsubject">prev step</button>
                 </div>
               </form>
 
@@ -198,6 +202,13 @@
               >
                 {% block secondary_action_text_desktop %}{% endblock %}
               </button>
+              {% if wizard.steps.prev %}
+                  <button
+                      x-on:click.prevent="document.getElementById('prev').click();"
+                      class="px-4 py-2 border border-2 text-white border-primary-blue mt-4 hover:bg-primary-blue hover:border-white"
+                  >Zurück
+                  </button>
+              {% endif %}
 							{% block modal %}{% endblock %}
             </div>
           </div>
