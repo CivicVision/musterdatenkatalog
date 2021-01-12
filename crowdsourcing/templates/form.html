@@ -159,6 +159,15 @@
                   </div>
                   <!-- eo all subject -->
                 </li>
+
+              <ul class="text-white bg-primary-blue border-b-2 border-primary-blue">
+              <li
+                x-on:click.prevent="location.reload()"
+                class="bg-white bg-opacity-30 p-4 text-xl relative">
+                <span> Weiß nicht, weiter ...</span>
+                {% include "chevron-right.html" with classes=" w-6 h-6 inline-block absolute right-0 md:hidden" %}
+              </li>
+              </ul>
                 <li
                   class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
                 >
@@ -208,6 +217,13 @@
                       class="px-4 py-2 border border-2 text-white border-primary-blue mt-4 hover:bg-primary-blue hover:border-white"
                   >Zurück
                   </button>
+              {% endif %}
+              {% if current_step == 1 %}
+                <button
+                    x-on:click.prevent="location.reload()"
+                    class="px-4 py-2 border border-2 text-white border-primary-blue mt-4 hover:bg-primary-blue hover:border-white"
+                >Weiß nicht, weiter zum nächsten Datensatz
+                </button>
               {% endif %}
 							{% block modal %}{% endblock %}
             </div>
