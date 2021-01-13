@@ -1,12 +1,17 @@
+from constance.test import override_config
+
 from musterdaten.test import TestCase
 from django.db.models import Avg
 
 from musterdaten.tests.factories import (
     DatasetFactory,
+    ModelsubjectFactory,
     ModeldatasetFactory,
-    Top3Factory
+    ScoreFactory,
+    Top3Factory,
+    CustomUserFactory
 )
-from musterdaten.models import Top3Modelsubject, Top3Modeldataset, Top3
+from musterdaten.models import Top3Modelsubject, Top3Modeldataset, Top3, Score, Dataset
 
 class TestDataset(TestCase):
     def test_factory(self):
@@ -19,6 +24,64 @@ class TestDataset(TestCase):
         dataset = DatasetFactory()
 
         assert str(dataset) == dataset.title
+
+    @override_config(SCORED_LESS_THAN=2, SCORED_MORE_THAN=1)
+    def test_next_dataset_for_user_return_scored_between(self):
+        user = CustomUserFactory()
+        dataset = DatasetFactory()
+        dataset_2 = DatasetFactory()
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset_2)
+
+        next_dataset = Dataset.objects.next_dataset_for_user(user)
+
+        assert next_dataset == dataset_2
+
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0)
+    def test_next_dataset_for_user_return_not_scored_by_user(self):
+        user = CustomUserFactory()
+        dataset = DatasetFactory()
+        dataset_2 = DatasetFactory()
+        dataset_3 = DatasetFactory()
+        ScoreFactory(dataset=dataset, user=user)
+        ScoreFactory(dataset=dataset_2, user=user)
+
+        next_dataset = Dataset.objects.next_dataset_for_user(user)
+
+        assert next_dataset == dataset_3
+
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0)
+    def test_next_dataset_for_user_return_not_scored_by_user_less_than(self):
+        user = CustomUserFactory()
+        dataset = DatasetFactory()
+        dataset_2 = DatasetFactory()
+        dataset_3 = DatasetFactory()
+        dataset_4 = DatasetFactory()
+        ScoreFactory(dataset=dataset, user=user)
+        ScoreFactory(dataset=dataset_2, user=user)
+        ScoreFactory(dataset=dataset_3, user=user)
+        ScoreFactory(dataset=dataset_4)
+
+        next_dataset = Dataset.objects.next_dataset_for_user(user)
+
+        assert next_dataset == dataset_4
+
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2)
+    def test_next_dataset_for_user_global_less(self):
+        user = CustomUserFactory()
+        dataset = DatasetFactory()
+        dataset_2 = DatasetFactory()
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset_2)
+
+        next_dataset = Dataset.objects.next_dataset_for_user(user)
+
+        assert next_dataset == dataset_2
+
 
 class TestModeldataset(TestCase):
     def test_factory(self):

@@ -77,3 +77,9 @@ class Top3Factory(factory.django.DjangoModelFactory):
     pred = 0.5
     dataset = factory.SubFactory(DatasetFactory)
     modeldataset = factory.SubFactory(ModeldatasetFactory)
+
+class CustomUserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.CustomUser
+
+    ip_address = "127.0.0.1"

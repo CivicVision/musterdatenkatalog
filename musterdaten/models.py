@@ -1,5 +1,7 @@
+from constance import config
+
 from django.db import models
-from django.db.models import Avg, Sum
+from django.db.models import Avg, Sum, Count
 
 
 class Modelsubject(models.Model):
@@ -91,6 +93,43 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+class DatasetQuerySet(models.QuerySet):
+    def scored_datasets(self):
+        ids = Score.total_datasets.all().values_list("dataset", flat=True)
+
+        return self.filter(pk__in=ids)
+
+    def with_scores(self):
+        return self.annotate(scored=Count('score'))
+
+    def available_datasets_for_user(self, user):
+        dataset_ids_in_range = Score.total_datasets.exclude(user=user).in_range(config.SCORED_LESS_THAN, config.SCORED_MORE_THAN).values_list("dataset", flat=True)
+        ids = list(dataset_ids_in_range)
+
+        if len(ids) < config.SCORED_AVAILABLE:
+            dataset_ids_less_than = Score.total_datasets.exclude(user=user).less_than(config.SCORED_LESS_THAN).values_list("dataset", flat=True)
+            ids = list(dataset_ids_less_than)
+            if dataset_ids_less_than.count() < config.SCORED_AVAILABLE:
+                excluded_ids = Score.objects.filter(user=user).values_list("dataset_id").distinct()
+                dataset_excluded = self.all().exclude(pk__in=excluded_ids)
+                return dataset_excluded
+        return self.all().filter(pk__in=ids)
+
+
+class DatasetManager(models.Manager):
+    def get_queryset(self):
+        return DatasetQuerySet(
+                model=self.model,
+                using=self._db,
+                hints=self._hints
+                )
+
+    def next_dataset_for_user(self, user):
+        return self.get_queryset().available_datasets_for_user(user).order_by("?").first()
+
+    def scored(self):
+        return self.get_queryset().scored_datasets()
+
 
 class Dataset(models.Model):
     title = models.CharField(max_length=512, verbose_name="titel")
@@ -108,6 +147,8 @@ class Dataset(models.Model):
 
     categories = models.ManyToManyField(to=Category)
     top_3 = models.ManyToManyField(to=Modeldataset, through="Top3")
+
+    objects = DatasetManager()
 
     class Meta:
         verbose_name = 'Datensatz'
@@ -141,6 +182,35 @@ class Dataset(models.Model):
             'modeldataset__modelsubject__title',
         ).annotate(pred=Sum('pred')).order_by('-pred')
 
+class ScoreDatasetQuerySet(models.QuerySet):
+
+    def count_datasets(self):
+        return (self.values("dataset").annotate(total=Count("dataset")).order_by("-total"))
+
+    def less_than(self, less_than=1):
+        return self.count_datasets().filter(total__lt=less_than)
+
+    def in_range(self, less_than=1, greater_than=2):
+        return self.count_datasets().filter(total__lt=less_than, total__gte=greater_than)
+
+
+class ScoreDatasetManager(models.Manager):
+    def get_queryset(self):
+        return ScoreDatasetQuerySet(
+                model=self.model,
+                using=self._db,
+                hints=self._hints
+                )
+
+    def count_datasets(self):
+        return self.get_queryset().count_datasets()
+
+    def less_than(self, less_than=1):
+        return self.get_queryset().less_than(less_than)
+
+    def in_range(self, less_than=1, greater_than=2):
+        return self.get_queryset().in_range(less_than, greater_than)
+
 
 class Score(models.Model):
 
@@ -149,6 +219,9 @@ class Score(models.Model):
     modeldataset = models.ForeignKey(to=Modeldataset, on_delete=models.PROTECT)
     session_id = models.CharField(max_length=32)
     user = models.ForeignKey(to="CustomUser", on_delete=models.PROTECT, blank=True, null=True)
+
+    total_datasets = ScoreDatasetManager()
+    objects = models.Manager()
 
     class Meta:
         verbose_name = "Bewertung"

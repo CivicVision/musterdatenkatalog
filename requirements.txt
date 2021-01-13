@@ -19,3 +19,4 @@ django-extensions
 django-formtools
 dj-database-url
 yacryptopan
+django-constance[database]
