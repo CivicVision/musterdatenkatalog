@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'constance',
+    'constance.backends.database',
     'musterdaten',
     'api',
     'tailwind',
@@ -163,3 +165,10 @@ if 'SECRET_KEY' in os.environ:
 
 if 'DEBUG' in os.environ:
     DEBUG = os.environ['DEBUG']
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'SCORED_LESS_THAN': (30, 'Datasets that scored less than this number'),
+    'SCORED_MORE_THAN': (20, 'Datasets that scored more than this number'),
+    'SCORED_AVAILABLE': (3, 'Datasets that need to be available for a user to show'),
+}

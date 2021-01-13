@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 from django.contrib.auth.models import Group
 
 from musterdaten.models import (
@@ -29,6 +30,20 @@ class DatasetAdmin(admin.ModelAdmin):
     search_fields = ("title", )
     inlines = (Top3tInline,)
     list_filter = ("modeldataset__modelsubject", "modeldataset",)
+    list_display = ("pk", "title", "scored")
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            _score_count=Count("score", distinct=True),
+        )
+        return queryset
+
+
+    def scored(self, obj):
+        return obj._score_count
+
+    scored.admin_order_field = '_score_count'
 
 
 class ModeldatasetInline(admin.StackedInline):

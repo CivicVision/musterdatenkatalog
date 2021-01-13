@@ -182,11 +182,14 @@ class EvaluateFormView(SessionWizardView):
     def get_dataset(self):
         if "dataset_id" in self.storage.extra_data:
             return self.get_dataset_by_id(self.storage.extra_data.get("dataset_id"))
-        dataset_ids = Score.objects.filter(session_id=self.get_session_id()).values_list("dataset_id").distinct()
-        dataset = Dataset.objects.exclude(id__in=dataset_ids).order_by("?").first()
-        if "dataset_id" not in self.storage.extra_data:
+        else:
             user = self.get_user()
-            self.storage.extra_data = {"dataset_id": dataset.pk, "session_id": self.get_session_id(), "user_id": user.pk}
+            dataset = Dataset.objects.next_dataset_for_user(user)
+            self.storage.extra_data = {
+                 "dataset_id": dataset.pk,
+                 "session_id": self.get_session_id(),
+                 "user_id": user.pk
+             }
         return dataset
 
     def get_context_data(self, form, **kwargs):
