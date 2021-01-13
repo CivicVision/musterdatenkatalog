@@ -25,7 +25,7 @@ class TestDataset(TestCase):
 
         assert str(dataset) == dataset.title
 
-    @override_config(SCORED_LESS_THAN=2, SCORED_MORE_THAN=1)
+    @override_config(SCORED_LESS_THAN=2, SCORED_MORE_THAN=1, SCORED_AVAILABLE=1)
     def test_next_dataset_for_user_return_scored_between(self):
         user = CustomUserFactory()
         dataset = DatasetFactory()
@@ -67,7 +67,7 @@ class TestDataset(TestCase):
 
         assert next_dataset == dataset_4
 
-    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2)
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2, SCORED_AVAILABLE=1)
     def test_next_dataset_for_user_global_less(self):
         user = CustomUserFactory()
         dataset = DatasetFactory()
