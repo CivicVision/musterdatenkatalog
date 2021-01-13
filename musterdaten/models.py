@@ -109,7 +109,7 @@ class DatasetQuerySet(models.QuerySet):
         if len(ids) < config.SCORED_AVAILABLE:
             dataset_ids_less_than = Score.total_datasets.exclude(user=user).less_than(config.SCORED_LESS_THAN).values_list("dataset", flat=True)
             ids = list(dataset_ids_less_than)
-            if dataset_ids_less_than.count() < config.SCORED_AVAILABLE:
+            if len(ids) < config.SCORED_AVAILABLE:
                 excluded_ids = Score.objects.filter(user=user).values_list("dataset_id").distinct()
                 dataset_excluded = self.all().exclude(pk__in=excluded_ids)
                 return dataset_excluded
