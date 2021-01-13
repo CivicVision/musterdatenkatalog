@@ -258,17 +258,18 @@ class Top3Modeldataset(Prediction):
         self.pred = entry.get('pred')
 
 class NoMatchScore(models.Model):
-     created_at = models.DateTimeField(auto_now_add=True)
-     dataset = models.ForeignKey(to=Dataset, on_delete=models.PROTECT)
-     session_id = models.CharField(max_length=32)
-     topic = models.CharField(max_length=255)
-     term = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    dataset = models.ForeignKey(to=Dataset, on_delete=models.PROTECT)
+    session_id = models.CharField(max_length=32)
+    topic = models.CharField(max_length=255)
+    term = models.CharField(max_length=255)
+    user = models.ForeignKey(to="CustomUser", on_delete=models.PROTECT, blank=True, null=True)
 
-     class Meta:
-         ordering = ['id']
+    class Meta:
+        ordering = ['id']
 
-     def __str__(self):
-         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.text
+    def __str__(self):
+        return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.term + " " + self.topic
 
 class CustomUser(models.Model):
-     ip_address = models.CharField(max_length=100)
+    ip_address = models.CharField(max_length=100)
