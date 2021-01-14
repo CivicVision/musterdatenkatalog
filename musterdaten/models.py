@@ -231,6 +231,11 @@ class Score(models.Model):
     def __str__(self):
         return "Dataset: " + self.dataset.title + " - Musterdatensatz: " + self.modeldataset.title
 
+class ScoreSummary(Score):
+    class Meta:
+        proxy = True
+        verbose_name = 'Bewertungen Dashboard'
+        verbose_name_plural = 'Bewertungen Dashboard'
 
 class Top3(models.Model):
     dataset = models.ForeignKey(
