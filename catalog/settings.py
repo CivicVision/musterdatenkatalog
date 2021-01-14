@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'zayaj0rl+17y&wf@$qtfq_@zj@v4xkj%t3hdf&yw)!ga!5zhtq'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -162,9 +162,6 @@ if 'SECRET_KEY' in os.environ:
     logger.info('Adding $SECRET_KEY to SECRET_KEY Django setting.')
     # Set the Django setting from the environment variable.
     SECRET_KEY = os.environ['SECRET_KEY']
-
-if 'DEBUG' in os.environ:
-    DEBUG = os.environ['DEBUG']
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
