@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.db.models import Count
 from django.contrib.auth.models import Group
 
+from django.db.models.functions import TruncDate
+
 from musterdaten.models import (
     Score,
     Dataset,
@@ -15,6 +17,7 @@ from musterdaten.models import (
     Top3,
     NoMatchScore,
     CustomUser,
+    ScoreSummary,
 )
 
 class Top3tInline(admin.TabularInline):
@@ -59,7 +62,7 @@ class CustomUserAdmin(admin.ModelAdmin):
      list_display = ("pk", "ip_address")
      inlines = (ScoreInlineAdmin, )
 
-    
+
 class ScoreInlineAdmin(admin.StackedInline):
      model = Score
 
@@ -73,7 +76,7 @@ class ModeldatasetAdmin(admin.ModelAdmin):
 
 class ScoreAdmin(admin.ModelAdmin):
     model = Score
-    list_display = ("dataset", "modeldataset", "session_id")
+    list_display = ("dataset", "modeldataset", "created_at", "user_id")
 
 
 class NoMatchScoreAdmin(admin.ModelAdmin):
@@ -81,7 +84,37 @@ class NoMatchScoreAdmin(admin.ModelAdmin):
     list_display = ("dataset", "session_id", "topic", "term")
 
 
+class ScoreSummaryAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/score_change_list.html'
+    actions = None
+    show_full_result_count = False
 
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(
+            request,
+            extra_context=extra_context,
+        )
+
+        try:
+            qs = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+
+        response.context_data['summary'] = list(
+            qs
+            .annotate(date=TruncDate('created_at'))
+            .values('date')
+            .order_by('date')
+            .annotate(scores=Count('date'))
+        )
+
+        response.context_data['summary_total'] = dict(qs.aggregate(total=Count('pk')))
+
+        return response
+
+
+
+admin.site.register(ScoreSummary, ScoreSummaryAdmin)
 admin.site.unregister(Group)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(NoMatchScore, NoMatchScoreAdmin)
