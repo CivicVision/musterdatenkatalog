@@ -1,6 +1,8 @@
 import uuid
 import os
 
+from ipware import get_client_ip
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView
@@ -171,7 +173,8 @@ class EvaluateFormView(SessionWizardView):
         if "user_id" in self.storage.extra_data:
             return self.get_user_by_id(self.storage.extra_data.get("user_id"))
 
-        ip_address = cp.anonymize(self.request.META.get("REMOTE_ADDR") or "127.0.0.1")
+        ip, is_routable = get_client_ip(self.request)
+        ip_address = cp.anonymize(ip or "127.0.0.1")
         user, created = CustomUser.objects.get_or_create(ip_address=ip_address)
 
         return user
