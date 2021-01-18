@@ -59,7 +59,9 @@
                       {% endif %}
                     </span
                     >
-                    <span class="">
+                    <span
+                      x-on:click.prevent="document.getElementById('prev').click();"
+                      class="">
                       Thema{% if current_step == 2 %}: {{modelsubject}}{% endif %}
                     </span>
                     {% if current_step == 1 %}
@@ -73,6 +75,7 @@
                   </ul>
                    <div
                      id="all-subject md:hidden"
+                     x-cloak
                      x-show="showAllSubjects">
                     <div
                       class="flex justify-between items-start space-x-6 bg-primary-blue py-4"
@@ -160,6 +163,8 @@
                   <!-- eo all subject -->
                 </li>
 
+              {% if current_step == 1 %}
+              <li>
               <ul class="text-white bg-primary-blue border-b-2 border-primary-blue">
               <li
                 x-on:click.prevent="location.reload()"
@@ -168,14 +173,17 @@
                 {% include "chevron-right.html" with classes=" w-6 h-6 inline-block absolute right-0 md:hidden" %}
               </li>
               </ul>
+              </li>
+              {% endif %}
                 <li
                   class="relative hover:bg-white text-primary-blue md:text-black p-0 md:p-2 bg-white md:bg-opacity-30"
                 >
-                  <a href="#" class="inline-block w-full py-2 md:py-0 pl-10">
+                  <a href="" 
+                    x-on:click.prevent="document.getElementById('prev').click();"
+                    class="inline-block w-full py-2 md:py-0 pl-10">
                     <span
                       class="flex items-center justify-center h-6 w-6 rounded-full text-white md:text-black bg-primary-blue absolute left-2 top-2"
-                      >2</span
-                    >
+                      >2</span>
                     Bezeichnung
                     {% if current_step == 2 %}
                       {% include "chevron-down.html" with classes="absolute w-5 h-5 inline-block right-1 md:hidden" %}
