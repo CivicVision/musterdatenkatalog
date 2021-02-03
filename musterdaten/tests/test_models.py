@@ -9,6 +9,7 @@ from musterdaten.tests.factories import (
     ModeldatasetFactory,
     ScoreFactory,
     Top3Factory,
+    DatasetWithTop3Factory,
     CustomUserFactory
 )
 from musterdaten.models import Top3Modelsubject, Top3Modeldataset, Top3, Score, Dataset
@@ -25,11 +26,11 @@ class TestDataset(TestCase):
 
         assert str(dataset) == dataset.title
 
-    @override_config(SCORED_LESS_THAN=2, SCORED_MORE_THAN=1, SCORED_AVAILABLE=1)
+    @override_config(SCORED_LESS_THAN=2, SCORED_MORE_THAN=1, SCORED_AVAILABLE=1, CONFIDENCE=1)
     def test_next_dataset_for_user_return_scored_between(self):
         user = CustomUserFactory()
-        dataset = DatasetFactory()
-        dataset_2 = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
+        dataset_2 = DatasetWithTop3Factory()
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset_2)
@@ -38,12 +39,12 @@ class TestDataset(TestCase):
 
         assert next_dataset == dataset_2
 
-    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0)
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0, CONFIDENCE=1)
     def test_next_dataset_for_user_return_not_scored_by_user(self):
         user = CustomUserFactory()
-        dataset = DatasetFactory()
-        dataset_2 = DatasetFactory()
-        dataset_3 = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
+        dataset_2 = DatasetWithTop3Factory()
+        dataset_3 = DatasetWithTop3Factory()
         ScoreFactory(dataset=dataset, user=user)
         ScoreFactory(dataset=dataset_2, user=user)
 
@@ -51,13 +52,13 @@ class TestDataset(TestCase):
 
         assert next_dataset == dataset_3
 
-    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0)
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=0, CONFIDENCE=1)
     def test_next_dataset_for_user_return_not_scored_by_user_less_than(self):
         user = CustomUserFactory()
-        dataset = DatasetFactory()
-        dataset_2 = DatasetFactory()
-        dataset_3 = DatasetFactory()
-        dataset_4 = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
+        dataset_2 = DatasetWithTop3Factory()
+        dataset_3 = DatasetWithTop3Factory()
+        dataset_4 = DatasetWithTop3Factory()
         ScoreFactory(dataset=dataset, user=user)
         ScoreFactory(dataset=dataset_2, user=user)
         ScoreFactory(dataset=dataset_3, user=user)
@@ -67,11 +68,11 @@ class TestDataset(TestCase):
 
         assert next_dataset == dataset_4
 
-    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2, SCORED_AVAILABLE=1)
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2, SCORED_AVAILABLE=1, CONFIDENCE=1)
     def test_next_dataset_for_user_global_less(self):
         user = CustomUserFactory()
-        dataset = DatasetFactory()
-        dataset_2 = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
+        dataset_2 = DatasetWithTop3Factory()
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset)
@@ -85,8 +86,8 @@ class TestDataset(TestCase):
     @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2, SCORED_AVAILABLE=1)
     def test_next_dataset_for_user_low_confidence(self):
         user = CustomUserFactory()
-        dataset = DatasetFactory()
-        dataset_2 = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
+        dataset_2 = DatasetWithTop3Factory()
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset)
         ScoreFactory(dataset=dataset)

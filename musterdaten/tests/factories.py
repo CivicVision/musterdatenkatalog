@@ -83,3 +83,10 @@ class CustomUserFactory(factory.django.DjangoModelFactory):
         model = models.CustomUser
 
     ip_address = "127.0.0.1"
+
+class DatasetWithTop3Factory(DatasetFactory):
+    top_3= factory.RelatedFactory(
+        Top3Factory,
+        factory_related_name='dataset',
+    )
+
