@@ -3,6 +3,7 @@ from musterdaten.models import Modeldataset
 from musterdaten.test import TestCase
 from musterdaten.tests.factories import (
     DatasetFactory,
+    DatasetWithTop3Factory,
     ModeldatasetFactory, Top3Factory, ModelsubjectFactory
 )
 
@@ -14,7 +15,7 @@ class TestIndex(TestCase):
 
 class TestEvaluate(TestCase):
     def test_ok(self):
-        dataset = DatasetFactory()
+        dataset = DatasetWithTop3Factory()
         modeldataset = ModeldatasetFactory()
         modelsubject = ModelsubjectFactory()
         top3 = Top3Factory(dataset=dataset, modeldataset=modeldataset, pred=0.6)
