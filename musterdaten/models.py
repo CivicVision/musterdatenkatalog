@@ -1,7 +1,7 @@
 from constance import config
 
 from django.db import models
-from django.db.models import Avg, Sum, Count
+from django.db.models import Avg, Sum, Count, Max
 
 
 class Modelsubject(models.Model):
@@ -111,9 +111,12 @@ class DatasetQuerySet(models.QuerySet):
             ids = list(dataset_ids_less_than)
             if len(ids) < config.SCORED_AVAILABLE:
                 excluded_ids = Score.objects.filter(user=user).values_list("dataset_id").distinct()
-                dataset_excluded = self.all().exclude(pk__in=excluded_ids)
+                dataset_excluded = self.low_confidence(config.CONFIDENCE).exclude(pk__in=excluded_ids)
                 return dataset_excluded
-        return self.all().filter(pk__in=ids)
+        return self.low_confidence(config.CONFIDENCE).filter(pk__in=ids)
+
+    def low_confidence(self, confidence):
+        return self.annotate(max_pred=Max('top3_modeldatasets__pred')).filter(max_pred__lt=confidence)
 
 
 class DatasetManager(models.Manager):
@@ -126,6 +129,9 @@ class DatasetManager(models.Manager):
 
     def next_dataset_for_user(self, user):
         return self.get_queryset().available_datasets_for_user(user).order_by("?").first()
+
+    def low_confidence(self, confidence):
+        return self.get_queryset().low_confidence(confidence)
 
     def scored(self):
         return self.get_queryset().scored_datasets()
