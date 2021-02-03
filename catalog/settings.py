@@ -168,4 +168,5 @@ CONSTANCE_CONFIG = {
     'SCORED_LESS_THAN': (30, 'Datasets that scored less than this number'),
     'SCORED_MORE_THAN': (20, 'Datasets that scored more than this number'),
     'SCORED_AVAILABLE': (3, 'Datasets that need to be available for a user to show'),
+    'CONFIDENCE': (0.6, 'Show datasets that have a maximum confidence of 60%'),
 }

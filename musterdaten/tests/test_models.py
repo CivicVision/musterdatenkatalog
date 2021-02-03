@@ -82,6 +82,33 @@ class TestDataset(TestCase):
 
         assert next_dataset == dataset_2
 
+    @override_config(SCORED_LESS_THAN=3, SCORED_MORE_THAN=2, SCORED_AVAILABLE=1)
+    def test_next_dataset_for_user_low_confidence(self):
+        user = CustomUserFactory()
+        dataset = DatasetFactory()
+        dataset_2 = DatasetFactory()
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset)
+        ScoreFactory(dataset=dataset_2)
+
+        next_dataset = Dataset.objects.next_dataset_for_user(user)
+
+        assert next_dataset == dataset_2
+
+    def test_low_confidence(self):
+        dataset = DatasetFactory(title='Low confidence')
+        dataset_2 = DatasetFactory(title='High confidence in one')
+        top3 = Top3Factory(pred=0.4,dataset=dataset)
+        top3_1 = Top3Factory(pred=0.4,dataset=dataset)
+        top3_2 = Top3Factory(pred=0.2,dataset=dataset)
+        top3_3 = Top3Factory(pred=0.7, dataset=dataset_2)
+        top3_4 = Top3Factory(pred=0.3, dataset=dataset_2)
+
+        datasets = Dataset.objects.low_confidence(0.5)
+
+        assert datasets.first() == dataset
 
 class TestModeldataset(TestCase):
     def test_factory(self):
